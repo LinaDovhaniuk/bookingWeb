@@ -20,7 +20,6 @@ const navigationStyles = makeStyles({
     },
     root: {
         flexGrow: 1,
-        position: 'fixed',
     },
 
     title: {
@@ -38,7 +37,7 @@ function Navigation() {
     const classes = navigationStyles();
     return (
         <div className = { classes.root }>
-            <AppBar position = 'fixed' style = {{backgroundColor: '#39A298'}}>
+            <AppBar position = 'static' style = {{backgroundColor: '#39A298'}}>
                 <Toolbar>
                     <svg width="56" height="44" viewBox="0 0 56 44" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="56" height="44" fill="url(#pattern0)"/>
