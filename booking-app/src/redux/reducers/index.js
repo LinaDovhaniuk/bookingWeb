@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import userData from './user';
-import { routerReducer } from 'react-router-redux'
+import { connectRouter } from 'connected-react-router';
 
 // import universitiesData from './universities';
 
-export default combineReducers({ userData, routing: routerReducer});
+export default history => combineReducers({ userData, router: connectRouter(history) });

@@ -1,5 +1,4 @@
-// import { withRouter } from "react-router";
-import { withRouter } from "react-router-dom";
+import { withRouter } from "react-router";
 
 import { compose } from "redux";
 import { connect } from "react-redux";
@@ -12,28 +11,43 @@ import Rating from '@material-ui/lab/Rating';
 import Button from "@material-ui/core/Button";
 import { makeStyles } from '@material-ui/core/styles';
 
+import { user } from '../data'
+
 const userPageStyles = makeStyles({
     mainBox: {
         display:        'flex',
         justifyContent: 'center',
-        flexDirection:  'column',
-        alignItems:     'center',
+        flexDirection:  'row',
+        alignItems:     'flex-start',
     },
     card: {
         width: '80%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        padding: 25,
+        '& > *': {
+            fontFamily: 'Montserrat',
+            fontSize: 20,
+        }
+
     },
     profileInfo: {
         display:        'flex',
         justifyContent: 'center',
-        flexDirection:  'column',
+        flexDirection:  'row',
         alignItems:     'center',
         padding:        50,
+        width: '100%',
+
     },
     info: {
+        width: '100%',
         display:        'flex',
         justifyContent: 'center',
         alignItems:     'center',
-        flexDirection:  'column',
+        flexDirection:  'row',
         textAlign:      'center',
         paddingRight:   '45px',
         paddingLeft:    '45px',
@@ -58,11 +72,36 @@ const userPageStyles = makeStyles({
             fontSize: 60,
         },
     },
-    username: {
-
+    usernameInfo: {
+        width: '100%',
+        display: 'flex',
+        alignItems: 'flex-start',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        lineHeight:     1.5,
     },
-    rating: {
-
+    upload:{
+       color:  '#009688',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        '& > *': {
+           margin: 5,
+        }
+    },
+    actions: {
+        width: 180,
+        display: 'flex',
+        flexDirection: 'column',
+        margin: 10,
+        borderRadius: '8%',
+        '& > *': {
+            margin: 5,
+            backgroundColor: '#009688',
+            color: 'white',
+            fontFamily: 'Montserrat',
+        }
     },
 
 });
@@ -70,8 +109,7 @@ const userPageStyles = makeStyles({
 
 function UserPage(props) {
     const classes = userPageStyles();
-    const name = 'User User';
-    const userRating = 3;
+    const { firstName, lastName, email, rating } = user;
     return (
         <Box className = { classes.mainBox }>
             <Box className = { classes.actions }>
@@ -79,20 +117,24 @@ function UserPage(props) {
                 <Button>Payment Settings</Button>
             </Box>
             <Card className = { classes.card }>
-                <Typography>User Profile</Typography>
-                <Box className = { classes.profileInfo}>
-                    <Avatar
-                        className = { classes.avatar }
-                        src = 'public/images/avatar-person.jpeg' />
-
+                <Typography varian='h5'>Your Profile</Typography>
+                <Box className={ classes.profileInfo }>
+                    <Box className= { classes.upload }>
+                        <Avatar
+                            className = { classes.avatar }
+                            src = 'public/images/avatar-person.jpeg' />
+                        <div>Upload photo</div>
+                    </Box>
                     <Box className = { classes.info }>
-                        <Box className={ classes.rating }>
-                            <div>{name}</div>
-                            <Rating name="read-only" value={userRating} readOnly />
-                        </Box>
-                        <Box className={ classes.username}>
+                        <Box className={ classes.usernameInfo }>
+                            <div>{firstName} {lastName}</div>
                             <div>Username</div>
+                            <div>Email</div>
+                        </Box>
+                        <Box className={ classes.usernameInfo}>
+                            <Rating name="read-only" value={rating} readOnly />
                             <div>{window.location.href}</div>
+                            <div>{email}</div>
                         </Box>
                     </Box>
                 </Box>
@@ -102,6 +144,7 @@ function UserPage(props) {
 }
 
 
-export default withRouter(compose(
+export default compose(
+    withRouter,
     connect(null, { })
-)(UserPage));
+)(UserPage);

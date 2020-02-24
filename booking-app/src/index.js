@@ -3,12 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux';
-
-import store, { history as browserHistory } from './redux/store';
-
-const history = syncHistoryWithStore(browserHistory, store)
+import { ConnectedRouter as Router } from 'connected-react-router';
+import store, { history } from './redux/store';
 
 const theme = createMuiTheme({});
 

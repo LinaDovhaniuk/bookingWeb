@@ -7,7 +7,7 @@ import reducer from '../reducers';
 import { sync } from './middleware';
 import thunk from 'redux-thunk';
 import { createBrowserHistory } from 'history';
-import { routerMiddleware as createRouterMiddleware } from 'react-router-redux';
+import { routerMiddleware as createRouterMiddleware } from 'connected-react-router';
 
 
 // Instruments
@@ -49,6 +49,6 @@ export { history };
 
 export default (() =>
     persistedState
-        ? createStore(reducer, persistedState, composeEnhancers(applyMiddleware(...middleware)))
-        : createStore(reducer, composeEnhancers(applyMiddleware(...middleware))))();
+        ? createStore(reducer(history), persistedState, composeEnhancers(applyMiddleware(...middleware)))
+        : createStore(reducer(history), composeEnhancers(applyMiddleware(...middleware))))();
 

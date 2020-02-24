@@ -11,21 +11,26 @@ import UserPage from "./containers/UserPage";
 import PropertiesList from "./containers/PropertiesList";
 import PropertyPage from "./containers/PropertyPage";
 import Navigation from "./containers/Navigation";
+import Box from "@material-ui/core/Box";
 
 
 class App extends Component {
 
-
     render () {
+        const username = 'username';
+
         return (
-            <Switch>
-                <Route  component = { UserPage } path = '/home' exact/>
-                <Route  component = { Login } path = '/login' exact/>
-                <Route  component = { SingUp } path = '/register' exact/>
-                <Route  component = { PropertiesList } path = '/properties' exact/>
-                <Route  component = { PropertyPage } path = '/properties/:id' exact/>
-                {/*<Redirect to= '/home'/>*/}
-            </Switch>
+            <Box>
+                <Navigation/>
+                <Switch>
+                    <Route exact component = { Login } path = '/login' />
+                    <Route exact component = { SingUp } path = '/register' />
+                    <Route exact component = { UserPage } path = {`/${username}`} />
+                    <Route exact component = { PropertiesList } path = '/properties' />
+                    <Route exact component = { PropertyPage } path = '/properties/:id' />
+                    <Redirect to= '/properties'/>
+                </Switch>
+            </Box>
         );
     }
 }
