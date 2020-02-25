@@ -2,8 +2,8 @@ import {withRouter} from "react-router";
 
 import {compose} from "redux";
 import {connect} from "react-redux";
-import React, { Component } from "react";
-import { withStyles } from '@material-ui/styles';
+import React, {Component} from "react";
+import {withStyles} from '@material-ui/styles';
 
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
@@ -13,7 +13,7 @@ import Rating from '@material-ui/lab/Rating';
 import Button from "@material-ui/core/Button";
 import PropTypes from 'prop-types';
 import '../style/index.css'
-import { user } from '../data'
+import {user} from '../data'
 
 
 const userPageStyles = () => ({
@@ -37,6 +37,7 @@ const userPageStyles = () => ({
             }
 
         },
+
         profileInfo: {
             display: 'flex',
             justifyContent: 'center',
@@ -46,6 +47,22 @@ const userPageStyles = () => ({
             width: '100%',
 
         },
+        '@media (max-width: 1100px)': {
+            profileInfo: {
+                flexDirection: 'column',
+                padding: 0,
+
+            },
+            card: {
+                marginRight: '20px',
+                '& > *': {
+                    width: '100%',
+                    textAlign: 'center',
+                    paddingBottom: '10px'
+                }
+            }
+        },
+
         info: {
             width: '100%',
             display: 'flex',
@@ -96,26 +113,39 @@ const userPageStyles = () => ({
         },
         actions: {
             width: 180,
-            display:
-                'flex',
-            flexDirection:
-                'column',
-            margin:
-                10,
-            borderRadius:
-                '8%',
+            display: 'flex',
+            flexDirection:'column',
+            margin:10,
+            borderRadius:'8%',
             '& > *':
                 {
                     margin: 5,
-                    backgroundColor:
-                        '#009688',
-                    color:
-                        'white',
-                    fontFamily:
-                        'Montserrat',
-                }
-        }
-        ,
+                    backgroundColor: '#009688',
+                    color: 'white',
+                    fontFamily: 'Montserrat',
+                },
+            ':hover': {
+                backgroundColor: 'red',
+            }
+        },
+        '@media (max-width: 600px)': {
+            mainBox: {
+                flexDirection: 'column',
+                alignItems: 'center',
+
+            },
+            info: {
+                flexDirection: 'column',
+
+            },
+            card: {
+                marginRight: '0',
+            },
+            usernameInfo: {
+                alignItems: 'center',
+                fontSize: 20,
+            }
+        },
 
     })
 ;
@@ -142,8 +172,8 @@ class UserPage extends Component {
 
 
     render() {
-        const { classes } = this.props;
-        const { firstName, lastName, username, email, rating, image } = this.state;
+        const {classes} = this.props;
+        const {firstName, lastName, username, email, rating, image} = this.state;
         return (
             <Box className={classes.mainBox}>
                 <Box className={classes.actions}>
@@ -156,14 +186,17 @@ class UserPage extends Component {
                         <Box className={classes.upload}>
                             <Avatar
                                 className={classes.avatar}
-                                src={ image === ''
+                                src={image === ''
                                     ?
                                     'public/images/avatar-person.jpeg'
                                     :
                                     image
                                 }/>
-                            <input type="file" class="upload_input" onChange={this.fileUploadHandler}/>
 
+
+                            <input type="file" id="file-input" class="upload_input" accept="image/*"
+                                   onChange={this.fileUploadHandler}/>
+                            <label htmlFor="file-input">Upload photo</label>
                         </Box>
                         <Box className={classes.info}>
                             <Box className={classes.usernameInfo}>
