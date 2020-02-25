@@ -51,7 +51,6 @@ class PropertiesList extends Component {
 
     render() {
         const {classes} = this.props;
-        console.log(this.items);
         return (
             <Box className={classes.mainBox}>
                 <Box className={classes.actions}>

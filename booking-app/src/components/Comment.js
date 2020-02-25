@@ -1,11 +1,14 @@
 import { withRouter } from "react-router";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import React from "react";
+import React, {Component} from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from "@material-ui/core/Card";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
+import PropTypes from "prop-types";
+import {withStyles} from "@material-ui/styles";
+import {user} from "../data";
 
 const moodColor = {
     'negative': '#F11A4E',
@@ -14,7 +17,7 @@ const moodColor = {
 };
 
 
-const commentStyles = makeStyles({
+const commentStyles = () => ({
     cover: {
         width: 150,
     },
@@ -59,12 +62,16 @@ const commentStyles = makeStyles({
     },
 
 });
+class Comment extends Component {
 
-function Comment(props) {
-    const classes = commentStyles();
-    const { id, author, text, created_date, mood_type } = props.comment;
-    const { first_name, last_name } = author;
-    return (
+    constructor(props) {
+        super(props);
+        this.info = {...props.comment};
+        this.author = {...this.info.author};
+    }
+    render() {
+        const {classes} = this.props;
+         return (
         <Card className = { classes.card }>
                 <Avatar
                     className = { classes.avatar }
@@ -72,21 +79,21 @@ function Comment(props) {
                 <Box className = { classes.infoBox }>
                     <Box className = {classes.mainInfo}>
                         <Box className = { classes.info }>
-                            <div>{first_name} {last_name}</div>
-                            <div>{created_date}</div>
+                            <div>{this.author.first_name} {this.author.last_name}</div>
+                            <div>{this.info.created_date}</div>
                         </Box>
                         <Box className = { classes.mood }>
-                            <div style = {{color: moodColor[mood_type]}}>{mood_type}</div>
+                            <div style = {{color: moodColor[this.info.mood_type]}}>{this.info.mood_type}</div>
                         </Box>
                     </Box>
-                    <Box className = { classes.description }>{text}</Box>
+                    <Box className = { classes.description }>{this.info.text}</Box>
                 </Box>
         </Card>
     )
+    }
 }
+Comment.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
 
-
-export default compose(
-    withRouter,
-    connect(null, { })
-)(Comment);
+export default withStyles(commentStyles)(Comment);
