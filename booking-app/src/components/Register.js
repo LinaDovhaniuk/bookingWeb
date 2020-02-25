@@ -10,10 +10,9 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
-import {makeStyles} from '@material-ui/core/styles';
 import Card from "@material-ui/core/Card";
-import PropTypes from "prop-types";
 import {withStyles} from "@material-ui/styles";
+import { history } from '../redux/store';
 
 const registerStyles = () => ({
     rootContainer: {
@@ -72,9 +71,47 @@ const registerStyles = () => ({
 });
 
 class Register extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            firstName: '',
+            lastName: '',
+            username: '',
+            email: '',
+        };
+    }
+
+    isNameValid = (name) => (/^[a-zA-Z]+$/).test(name);
+
+
+    isSurnameValid = (surname) => (/^[a-zA-Z]+$/).test(surname);
+
+
+    isUsernameValid = (username) => (/^[a-zA-Z0-9_]+$/).test(username);
+
+
+    isEmailValid = (email) => (/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/).test(email);
+
+    // handleEmailChange = ({ target: { value }}) => {
+    //     this.setState({
+    //         email: value,
+    //     });
+    // };
+    //
+    // isPasswordValid = (password) => password === this.state.repeatedPassword;
+
+
+    isDisabled = () => !(this.isNameValid(this.state.firstName) &&
+        this.isSurnameValid(this.state.lastName) &&
+        this.isEmailValid(this.state.email) &&
+        this.isUsernameValid(this.state.username)
+    );
+
+
     onSubmit = (values) => {
-        console.log('Send values to api/register')
+         history.replace('/properties')
     };
+
 
     render() {
         const { classes } = this.props;
@@ -93,6 +130,8 @@ class Register extends Component {
                                 <Field name='firstName'>
                                     {({input}) => (
                                         <TextField
+                                            error = {this.isNameValid(input)}
+                                            helperText = 'Only letter available'
                                             className={classes.item}
                                             name='firstName'
                                             label='First name'
@@ -105,6 +144,8 @@ class Register extends Component {
                                 <Field name='lastName'>
                                     {({input, meta}) => (
                                         <TextField
+                                            error = {this.isSurnameValid(input)}
+                                            helperText = 'Only letter available'
                                             className={classes.item}
                                             name='lastName'
                                             label='Last name'
@@ -117,7 +158,10 @@ class Register extends Component {
                                 <Field name='username'>
                                     {({input, meta}) => (
                                         <TextField
+                                            error = {this.isUsernameValid(input)}
+                                            helperText = 'For example: User_name'
                                             className={classes.item}
+                                            name='Username'
                                             label='Username'
                                             placeholder='Input text for a single line field'
                                             required
@@ -128,6 +172,8 @@ class Register extends Component {
                                 <Field name='email'>
                                     {({input, meta}) => (
                                         <TextField
+                                            error = {this.isEmailValid(input)}
+                                            helperText = 'For example: user.name@gmail.com'
                                             className={classes.item}
                                             label='Email'
                                             placeholder='Input text for a single line field'
@@ -148,17 +194,31 @@ class Register extends Component {
                                         />
                                     )}
                                 </Field>
+                                <Field name='repeatedPassword'>
+                                    {({input, meta}) => (
+                                        <TextField
+                                            className={classes.item}
+                                            label='Repeat your password'
+                                            placeholder='Repeat your password'
+                                            required
+                                            type='password'
+                                            {...input}
+                                        />
+                                    )}
+                                </Field>
 
                                 <Box className={classes.actions}>
                                     <Button
+                                        disabled = {this.isDisabled}
                                         className={classes.btn}
                                         color='primary'
                                         type='submit'
                                         variant='contained'>
                                         Sign up
                                     </Button>
-                                    <NavLink className={classes.link} to='/login'>Already have an account. Sign
-                                        in </NavLink>
+                                    <NavLink className={classes.link} to='/login'>
+                                        Already have an account. Sign in
+                                    </NavLink>
                                 </Box>
                             </form>
                         )}
