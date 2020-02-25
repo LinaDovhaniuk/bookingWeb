@@ -34,6 +34,7 @@ export const user = {
     username: 'username',
     email: 'email@gmail.com',
     rating: 4.5,
+    image: '',
 };
 
 export const comments = [

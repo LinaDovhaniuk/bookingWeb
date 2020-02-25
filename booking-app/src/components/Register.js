@@ -77,7 +77,7 @@ class Register extends Component {
     };
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
         return (
             <div className={classes.rootContainer}>
                 <Card className={classes.card}>
@@ -170,9 +170,5 @@ class Register extends Component {
         )
     }
 }
-
-Register.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(registerStyles)(Register);

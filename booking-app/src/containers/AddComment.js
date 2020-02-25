@@ -2,15 +2,15 @@ import { withRouter } from "react-router";
 
 import { compose } from "redux";
 import { connect } from "react-redux";
-import React from "react";
+import React, { Component } from "react";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Field, Form } from "react-final-form";
-import { makeStyles } from '@material-ui/core/styles';
+import withStyles from "@material-ui/core/styles/withStyles";
 
-const addCommentStyles = makeStyles({
+const addCommentStyles = () => ({
     mainBox: {
         display:        'flex',
         flexDirection:  'row',
@@ -49,56 +49,58 @@ const addCommentStyles = makeStyles({
 });
 
 
-function AddComment(props) {
-    const classes = addCommentStyles();
-    const onSubmit = () => {
+class AddComment extends Component {
+
+    onSubmit = () => {
         console.log('Sent');
     };
-    return (
-        <Box className = { classes.mainBox }>
-            <Avatar
-                className = { classes.avatar }
-                src = 'public/images/avatar-person.jpeg' />
-            <Box className = { classes.commentBox }>
+
+    render () {
+        const { classes } = this.props;
+        return (
+            <Box className={classes.mainBox}>
+                <Avatar
+                    className={classes.avatar}
+                    src='public/images/avatar-person.jpeg'/>
+                <Box className={classes.commentBox}>
 
                     <Form
-                        onSubmit = { onSubmit }
-                        render = { ({ handleSubmit }) => (
+                        onSubmit={this.onSubmit}
+                        render={({handleSubmit}) => (
                             <form
-                                className = { classes.form }
-                                onSubmit = { handleSubmit }>
-                                <Field name = 'comment'>
-                                    {({ input }) => (
+                                className={classes.form}
+                                onSubmit={handleSubmit}>
+                                <Field name='comment'>
+                                    {({input}) => (
                                         <TextField
-                                            placeholder = 'Leave your feedback here ...'
+                                            placeholder='Leave your feedback here ...'
                                             required
                                             variant="outlined"
                                             multiline
                                             rows="6"
-                                            { ...input }
+                                            {...input}
                                         />
                                     )}
                                 </Field>
-                                    <Button
-                                        className = { classes.btn }
-                                        color = 'primary'
-                                        type = 'submit'
-                                        variant = 'contained' >
-                                        Send
-                                    </Button>
+                                <Button
+                                    className={classes.btn}
+                                    color='primary'
+                                    type='submit'
+                                    variant='contained'>
+                                    Send
+                                </Button>
 
                             </form>
 
-                        ) }
+                        )}
                     />
 
+                </Box>
             </Box>
-        </Box>
-    )
+            )
+
+    }
 }
 
 
-export default compose(
-    withRouter,
-    connect(null, { })
-)(AddComment);
+export default withStyles(addCommentStyles)(AddComment);

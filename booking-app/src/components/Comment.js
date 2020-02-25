@@ -66,11 +66,12 @@ class Comment extends Component {
 
     constructor(props) {
         super(props);
-        this.info = {...props.comment};
-        this.author = {...this.info.author};
     }
     render() {
-        const {classes} = this.props;
+        const { classes, comment } = this.props;
+
+
+        const { id, text, created_date, mood_type, author: { first_name, last_name } } = comment;
          return (
         <Card className = { classes.card }>
                 <Avatar
@@ -79,21 +80,19 @@ class Comment extends Component {
                 <Box className = { classes.infoBox }>
                     <Box className = {classes.mainInfo}>
                         <Box className = { classes.info }>
-                            <div>{this.author.first_name} {this.author.last_name}</div>
-                            <div>{this.info.created_date}</div>
+                            <div>{first_name} {last_name}</div>
+                            <div>{created_date}</div>
                         </Box>
                         <Box className = { classes.mood }>
-                            <div style = {{color: moodColor[this.info.mood_type]}}>{this.info.mood_type}</div>
+                            <div style = {{color: moodColor[mood_type]}}>{mood_type}</div>
                         </Box>
                     </Box>
-                    <Box className = { classes.description }>{this.info.text}</Box>
+                    <Box className = { classes.description }>{text}</Box>
                 </Box>
         </Card>
     )
     }
 }
-Comment.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
+
 
 export default withStyles(commentStyles)(Comment);

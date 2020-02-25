@@ -96,22 +96,19 @@ export const images = [
 ];
 
 class PropertyPage extends Component {
-    static defaultProps = {};
-
-    state = {};
 
     constructor(props) {
         super(props);
+        this.state = {
+            property:  {...properties.items[0]},
+        };
 
-
-        this.property = properties.items[0];
-        this.propertyInfo = {...this.property};
     }
 
     render() {
-        const {classes} = this.props;
-        let [mainPhoto, ...restPhotos] = images;
-        let [second, third, ...rest] = restPhotos;
+        const { classes } = this.props;
+        const [mainPhoto, ...restPhotos] = images;
+        const { id, name, description } = this.state.property;
 
         return (
             <Box className={classes.mainBox}>
@@ -129,8 +126,8 @@ class PropertyPage extends Component {
                 </Grid>
                 <Box className={classes.info}>
                     <Card className={classes.card}>
-                        <Typography variant='h6'>{this.propertyInfo.name}</Typography>
-                        <div>{this.propertyInfo.description}</div>
+                        <Typography variant='h6'>{name}</Typography>
+                        <div>{description}</div>
                     </Card>
                     <Box className={classes.actions}>
                         <Button>Reserve</Button>
@@ -146,10 +143,6 @@ class PropertyPage extends Component {
         )
     }
 }
-
-PropertyPage.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(propertyPageStyles)(PropertyPage);
 

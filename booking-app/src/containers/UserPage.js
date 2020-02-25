@@ -2,8 +2,8 @@ import {withRouter} from "react-router";
 
 import {compose} from "redux";
 import {connect} from "react-redux";
-import React, {Component} from "react";
-import {withStyles} from '@material-ui/styles';
+import React, { Component } from "react";
+import { withStyles } from '@material-ui/styles';
 
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
@@ -11,24 +11,10 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Rating from '@material-ui/lab/Rating';
 import Button from "@material-ui/core/Button";
-import {makeStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import '../style/index.css'
-import {user} from '../data'
+import { user } from '../data'
 
-
-//
-// const styles = theme => ({
-//   root: {
-//     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-//     border: 0,
-//     borderRadius: 3,
-//     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-//     color: 'white',
-//     height: 48,
-//     padding: '0 30px',
-//   },
-// });
 
 const userPageStyles = () => ({
         mainBox: {
@@ -139,7 +125,7 @@ class UserPage extends Component {
 
     constructor(props) {
         super(props);
-        this.user = {...user};
+        this.state = {...user};
     }
 
     fileUploadHandler = event => {
@@ -149,14 +135,15 @@ class UserPage extends Component {
         reader.onloadend = r => {
             let base_64_encode_image = r.srcElement.result;
             this.setState({
-                'image': base_64_encode_image
+                image: base_64_encode_image
             });
         }
     };
 
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
+        const { firstName, lastName, username, email, rating, image } = this.state;
         return (
             <Box className={classes.mainBox}>
                 <Box className={classes.actions}>
@@ -169,22 +156,25 @@ class UserPage extends Component {
                         <Box className={classes.upload}>
                             <Avatar
                                 className={classes.avatar}
-                                src={this.state && this.state.image ?
-                                    this.state.image :
-                                    'public/images/avatar-person.jpeg'}/>
+                                src={ image === ''
+                                    ?
+                                    'public/images/avatar-person.jpeg'
+                                    :
+                                    image
+                                }/>
                             <input type="file" class="upload_input" onChange={this.fileUploadHandler}/>
 
                         </Box>
                         <Box className={classes.info}>
                             <Box className={classes.usernameInfo}>
-                                <div>{this.user.firstName} {this.user.lastName}</div>
+                                <div>{firstName} {lastName}</div>
                                 <div>Username</div>
                                 <div>Email</div>
                             </Box>
                             <Box className={classes.usernameInfo}>
-                                <Rating name="read-only" value={this.user.rating} readOnly/>
+                                <Rating name="read-only" value={rating} readOnly/>
                                 <div>{window.location.href}</div>
-                                <div>{this.user.email}</div>
+                                <div>{email}</div>
                             </Box>
                         </Box>
                     </Box>
@@ -196,9 +186,6 @@ class UserPage extends Component {
     }
 }
 
-UserPage.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(userPageStyles)(UserPage);
 

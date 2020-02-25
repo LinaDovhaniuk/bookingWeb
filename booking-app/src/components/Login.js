@@ -66,7 +66,7 @@ class Login extends Component {
     };
 
     render() {
-         const {classes} = this.props;
+         const { classes } = this.props;
         return (
             <div className={classes.rootContainer}>
                 <Card className={classes.card}>

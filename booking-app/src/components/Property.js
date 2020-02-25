@@ -4,14 +4,15 @@ import { withRouter } from "react-router";
 
 import { compose } from "redux";
 import { connect } from "react-redux";
-import React from "react";
+import React, { Component } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import ClampLines from 'react-clamp-lines';
+import withStyles from "@material-ui/core/styles/withStyles";
 
-const propertyStyles = makeStyles({
+const propertyStyles = () => ({
     cover: {
         width: 150,
     },
@@ -21,7 +22,6 @@ const propertyStyles = makeStyles({
         justifyContent: 'flex-start',
         marginTop: 10,
         fontFamily: 'Montserrat',
-        paddingTop: '70px'
     },
     image: {
         width: 250,
@@ -47,38 +47,44 @@ const propertyStyles = makeStyles({
     more: {},
 });
 
-function Property(props) {
-    const classes = propertyStyles();
-    const {  id, name, description } = props.item;
-    return (
-        <Card className={classes.card}>
+class Property extends Component {
+
+    render() {
+        const { classes, item }= this.props;
+        const {  id, name, description } = item;
+
+        return (
+            <Card className={classes.card}>
                 <div >
                     <img
                         className={classes.image}
                         src='https://image.freepik.com/foto-gratis/plano-geometrico-papel-azul-rosa-blanco-color-blanco-tres-fondos-al-lado_78774-433.jpg'/>
                 </div>
-            <Box className={classes.info}>
-                <Typography variant='h5'>{name}</Typography>
-                <ClampLines
-                    text={description}
-                    id="really-unique-id"
-                    lines={3}
-                    ellipsis="..."
-                    buttons={false}
-                />
-                <NavLink
-                    className={classes.link}
-                    to = {`/properties/${id}`}
-                >
-                    View more
-                </NavLink>
-            </Box>
-        </Card>
-    )
+                <Box className={classes.info}>
+                    <Typography variant='h5'>{name}</Typography>
+                    <ClampLines
+                        text={description}
+                        id="really-unique-id"
+                        lines={3}
+                        ellipsis="..."
+                        buttons={false}
+                    />
+                    <NavLink
+                        className={classes.link}
+                        to = {`/properties/${id}`}
+                    >
+                        View more
+                    </NavLink>
+                </Box>
+            </Card>
+        )
+    }
+
 }
 
 
 export default compose(
     connect(null),
     withRouter,
+    withStyles(propertyStyles)
 )(Property);

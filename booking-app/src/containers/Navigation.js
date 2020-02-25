@@ -41,7 +41,7 @@ class Navigation extends Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
         return (
             <div className={classes.root}>
                 <AppBar position='fixed' style={{backgroundColor: '#39A298'}}>
@@ -119,8 +119,5 @@ class Navigation extends Component {
     }
 }
 
-Navigation.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(navigationStyles)(Navigation);

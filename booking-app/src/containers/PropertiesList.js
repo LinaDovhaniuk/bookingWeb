@@ -46,18 +46,21 @@ class PropertiesList extends Component {
 
     constructor(props) {
         super(props);
-        this.items = {...properties};
+        this.state = {
+            items: properties.items
+        };
     }
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
+        const { items } = this.state;
         return (
             <Box className={classes.mainBox}>
                 <Box className={classes.actions}>
                     <Button>Profile Settings</Button>
                 </Box>
                 <Box className={classes.properties}>
-                    {this.items.items.map( item =>  <Property key={`property-${item.id}`} item={item} />)}
+                    {items.map( item =>  <Property key={`property-${item.id}`} item={item} />)}
                     <div className={classes.actions}>
                         <Button>View more</Button>
                     </div>
@@ -67,9 +70,5 @@ class PropertiesList extends Component {
         )
     }
 }
-
-PropertiesList.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(listStyles)(PropertiesList);
