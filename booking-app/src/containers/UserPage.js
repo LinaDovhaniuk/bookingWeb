@@ -36,6 +36,7 @@ const userPageStyles = () => ({
             justifyContent: 'center',
             flexDirection: 'row',
             alignItems: 'flex-start',
+            paddingTop: '70px'
         },
         card: {
             width: '80%',
@@ -134,7 +135,7 @@ const userPageStyles = () => ({
 ;
 
 
-class UserPageMY extends Component {
+class UserPage extends Component {
 
     constructor(props) {
         super(props);
@@ -195,11 +196,11 @@ class UserPageMY extends Component {
     }
 }
 
-UserPageMY.propTypes = {
+UserPage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(userPageStyles)(UserPageMY);
+export default withStyles(userPageStyles)(UserPage);
 
 
 

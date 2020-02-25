@@ -1,23 +1,23 @@
-import { withRouter } from "react-router";
+import {withRouter} from "react-router";
 
-import { compose } from "redux";
-import { connect } from "react-redux";
-import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
+import {compose} from "redux";
+import {connect} from "react-redux";
+import React, {Component} from "react";
+import {makeStyles} from '@material-ui/core/styles';
 import Box from "@material-ui/core/Box";
 
-import { properties, comments } from '../data';
-import { Typography } from '@material-ui/core';
+import {properties, comments, user} from '../data';
+import {Typography} from '@material-ui/core';
 import Comment from "../components/Comment";
-import { Button } from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Card from "@material-ui/core/Card";
 import AddComment from "./AddComment";
+import PropTypes from "prop-types";
+import {withStyles} from "@material-ui/styles";
 
-const propertyPageStyles = makeStyles({
-    mainBox: {
-
-    },
+const propertyPageStyles = () => ({
+    mainBox: {},
     photosBox: {
         display: 'flex',
         flexDirection: 'row',
@@ -95,49 +95,61 @@ export const images = [
     'https://img.freepik.com/free-photo/copyspace_24972-348.jpg?size=626&ext=jpg'
 ];
 
+class PropertyPage extends Component {
+    static defaultProps = {};
 
-function PropertyPage(props) {
-    const classes = propertyPageStyles();
-    const property = properties.items[0];
-    const { id, name, description } = property;
-    const [mainPhoto, ...restPhotos] = images;
-    const [second, third, ...rest] = restPhotos;
+    state = {};
 
-    return (
-        <Box className = { classes.mainBox }>
-            <Grid container className = { classes.photosBox }>
-                <Grid  className={classes.mainPhoto}>
-                    <img src={mainPhoto}/>
+    constructor(props) {
+        super(props);
+
+
+        this.property = properties.items[0];
+        this.propertyInfo = {...this.property};
+    }
+
+    render() {
+        const {classes} = this.props;
+        let [mainPhoto, ...restPhotos] = images;
+        let [second, third, ...rest] = restPhotos;
+
+        return (
+            <Box className={classes.mainBox}>
+                <Grid container className={classes.photosBox}>
+                    <Grid className={classes.mainPhoto}>
+                        <img src={mainPhoto}/>
+                    </Grid>
+                    <Grid container className={classes.photos}>
+                        {restPhotos.map((img, index) => (
+
+                            <img key={`photo-${index}`} className={classes.image} src={img}/>
+
+                        ))}
+                    </Grid>
                 </Grid>
-                <Grid container className={ classes.photos }>
-                    {restPhotos.map((img, index) => (
+                <Box className={classes.info}>
+                    <Card className={classes.card}>
+                        <Typography variant='h6'>{this.propertyInfo.name}</Typography>
+                        <div>{this.propertyInfo.description}</div>
+                    </Card>
+                    <Box className={classes.actions}>
+                        <Button>Reserve</Button>
+                    </Box>
+                </Box>
 
-                            <img key={`photo-${index}`} className={classes.image} src={img} />
-
-                    ))}
-                </Grid>
-            </Grid>
-            <Box className={ classes.info }>
-                <Card className = { classes.card }>
-                    <Typography variant='h6'>{name}</Typography>
-                    <div>{description}</div>
-                </Card>
-                <Box className={ classes.actions }>
-                    <Button>Reserve</Button>
+                <Box className={classes.comments}>
+                    <Typography variant='h4'>Comments</Typography>
+                    {comments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
+                    <AddComment/>
                 </Box>
             </Box>
-
-            <Box className={ classes.comments }>
-                <Typography variant='h4'>Comments</Typography>
-                {comments.map((c, index) => <Comment key={`comment-${index}`} comment = {c}/>)}
-                <AddComment />
-            </Box>
-        </Box>
-    )
+        )
+    }
 }
 
+PropertyPage.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
 
-export default compose(
-    withRouter,
-    connect(null, { })
-)(PropertyPage);
+export default withStyles(propertyPageStyles)(PropertyPage);
+

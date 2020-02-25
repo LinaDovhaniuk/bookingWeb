@@ -18,6 +18,7 @@ const addCommentStyles = makeStyles({
         marginTop: 10,
         padding: 20,
         fontFamily: 'Montserrat',
+        paddingTop: '70px'
     },
 
     avatar: {

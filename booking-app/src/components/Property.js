@@ -21,6 +21,7 @@ const propertyStyles = makeStyles({
         justifyContent: 'flex-start',
         marginTop: 10,
         fontFamily: 'Montserrat',
+        paddingTop: '70px'
     },
     image: {
         width: 250,
