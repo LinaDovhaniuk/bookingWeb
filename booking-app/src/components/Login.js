@@ -1,6 +1,6 @@
 import {withRouter} from "react-router";
 import {NavLink} from "react-router-dom";
-
+import { history } from '../redux/store';
 import {compose} from "redux";
 import {connect} from "react-redux";
 import React, {Component} from "react";
@@ -62,7 +62,9 @@ const loginStyles = () => ({
 
 class Login extends Component {
     onSubmit = (values) => {
+        history.replace('/username');
         console.log('Send values to api/login');
+        //history.replace('/username');
     };
 
     render() {
@@ -105,7 +107,8 @@ class Login extends Component {
                                         className={classes.btn}
                                         color='primary'
                                         type='submit'
-                                        variant='contained'>
+                                        variant='contained'
+                                    >
                                         Sign in
                                     </Button>
                                     <NavLink className={classes.link} to='/register'>Don’t have any account yet? Sign
