@@ -6,6 +6,9 @@ import {connect} from "react-redux";
 import React, {Component} from "react";
 import {Field, Form} from "react-final-form";
 import TextField from "@material-ui/core/TextField";
+
+import { Input } from '@material-ui/core';
+import { FormHelperText } from '@material-ui/core';
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -70,7 +73,7 @@ const registerStyles = () => ({
 
 });
 
-class Register extends Component {
+class Register extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -78,20 +81,23 @@ class Register extends Component {
             lastName: '',
             username: '',
             email: '',
+            password:'',
+            repeatedPassword:''
         };
     }
 
-    isNameValid = (name) => (/^[a-zA-Z]+$/).test(name);
+    isNameValid = (name) => (/^[a-zA-Z]+$/).test(name) &&  name.length>2;
 
 
-    isSurnameValid = (surname) => (/^[a-zA-Z]+$/).test(surname);
+    isSurnameValid = (surname) => (/^[a-zA-Z]+$/).test(surname) &&  surname.length>2;
 
 
-    isUsernameValid = (username) => (/^[a-zA-Z0-9_]+$/).test(username);
+    isUsernameValid = (username) => (/^[a-zA-Z0-9_]+$/).test(username) && username.length>4;
 
 
     isEmailValid = (email) => (/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/).test(email);
-
+    isPasswordValid = (password) => password.length>=6;
+    isRepeatedPasswordValid = (password) => password===this.state.password && this.isPasswordValid(this.state.password);
     // handleEmailChange = ({ target: { value }}) => {
     //     this.setState({
     //         email: value,
@@ -101,20 +107,48 @@ class Register extends Component {
     // isPasswordValid = (password) => password === this.state.repeatedPassword;
 
 
-    isDisabled = () => !(this.isNameValid(this.state.firstName) &&
-        this.isSurnameValid(this.state.lastName) &&
-        this.isEmailValid(this.state.email) &&
-        this.isUsernameValid(this.state.username)
-    );
+    //isDisabled = () => !(this.isNameValid(this.state.firstName) //&&
+       // this.isSurnameValid(this.state.lastName) &&
+       // this.isEmailValid(this.state.email) &&
+      //  this.isUsernameValid(this.state.username)
+    //);
 
+    handleNameChange = evt => this.setState({ firstName: evt.target.value });
+    handleLastNameChange = evt => this.setState({ lastName: evt.target.value });
+    handleUsernameChange = evt => this.setState({ username: evt.target.value });
+    handleEmailChange = evt => this.setState({ email: evt.target.value });
+    handlePasswordChange = evt => this.setState({ password: evt.target.value });
+    handleRepeatedPasswordChange = evt => this.setState({ repeatedPassword: evt.target.value });
 
     onSubmit = (values) => {
          history.replace('/properties')
     };
 
+    canBeSubmitted() {
+        const {firstName, lastName, username, email,password, repeatedPassword } = this.state;
+
+
+        return (
+            this.isNameValid(firstName) &&
+            this.isSurnameValid(lastName) &&
+            this.isUsernameValid(username) &&
+            this.isEmailValid(email) &&
+            this.isPasswordValid(password) &&
+            this.isRepeatedPasswordValid(repeatedPassword)
+        );
+    }
+
+    handleSubmit = (evt) => {
+        if (!this.canBeSubmitted()) {
+            evt.preventDefault();
+            return;
+        }
+        // actual submit logic...
+    };
 
     render() {
         const { classes } = this.props;
+        const isEnabled = this.canBeSubmitted(); //this.isNameValid(firstName);
         return (
             <div className={classes.rootContainer}>
                 <Card className={classes.card}>
@@ -127,89 +161,83 @@ class Register extends Component {
                         onSubmit={this.onSubmit}
                         render={({handleSubmit}) => (
                             <form className={classes.container} onSubmit={handleSubmit}>
-                                <Field name='firstName'>
-                                    {({input}) => (
-                                        <TextField
-                                            error = {this.isNameValid(input)}
-                                            helperText = 'Only letter available'
-                                            className={classes.item}
-                                            name='firstName'
-                                            label='First name'
-                                            placeholder='Input text for a single line field'
-                                            required
-                                            {...input}
-                                        />
-                                    )}
-                                </Field>
-                                <Field name='lastName'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            error = {this.isSurnameValid(input)}
-                                            helperText = 'Only letter available'
-                                            className={classes.item}
-                                            name='lastName'
-                                            label='Last name'
-                                            placeholder='Input text for a single line field'
-                                            required
-                                            {...input}
-                                        />
-                                    )}
-                                </Field>
-                                <Field name='username'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            error = {this.isUsernameValid(input)}
-                                            helperText = 'For example: User_name'
-                                            className={classes.item}
-                                            name='Username'
-                                            label='Username'
-                                            placeholder='Input text for a single line field'
-                                            required
-                                            {...input}
-                                        />
-                                    )}
-                                </Field>
-                                <Field name='email'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            error = {this.isEmailValid(input)}
-                                            helperText = 'For example: user.name@gmail.com'
-                                            className={classes.item}
-                                            label='Email'
-                                            placeholder='Input text for a single line field'
-                                            required
-                                            {...input}
-                                        />
-                                    )}
-                                </Field>
-                                <Field name='password'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            className={classes.item}
-                                            label='Password'
-                                            placeholder='Enter your password'
-                                            required
-                                            type='password'
-                                            {...input}
-                                        />
-                                    )}
-                                </Field>
-                                <Field name='repeatedPassword'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            className={classes.item}
-                                            label='Repeat your password'
-                                            placeholder='Repeat your password'
-                                            required
-                                            type='password'
-                                            {...input}
-                                        />
-                                    )}
-                                </Field>
+
+                                 <Input
+                                         className={classes.item}
+                                         name='firstName'
+                                         label='First name'
+                                         placeholder='First Name'
+                                         helperText = 'Only letter available'
+                                         required
+                                         value={this.state.firstName}
+                                         onChange={this.handleNameChange}
+                                         error = {!this.isNameValid(this.state.firstName)}
+                                 />
+                                <FormHelperText id="component-error-text">Only letters available</FormHelperText>
+                                <Input
+                                    className={classes.item}
+                                    name='surname'
+                                    label='Surname'
+                                    placeholder='Surname'
+                                    helperText = 'Only letter available'
+                                    required
+                                    value={this.state.lastName}
+                                    onChange={this.handleLastNameChange}
+                                    error = {!this.isSurnameValid(this.state.lastName)}
+                                />
+                                <FormHelperText id="component-error-text">Only letters available</FormHelperText>
+                                <Input
+                                    className={classes.item}
+                                    name='username'
+                                    label='Username'
+                                    placeholder='Username'
+                                    helperText = 'Only letter available'
+                                    required
+                                    value={this.state.username}
+                                    onChange={this.handleUsernameChange}
+                                    error = {!this.isUsernameValid(this.state.username)}
+                                />
+                                <FormHelperText id="component-error-text">e.g. Username</FormHelperText>
+                                <Input
+                                    className={classes.item}
+                                    name='email'
+                                    label='Email'
+                                    placeholder='Email'
+                                    helperText = 'Only letter available'
+                                    required
+                                    value={this.state.email}
+                                    onChange={this.handleEmailChange}
+                                    error = {!this.isEmailValid(this.state.email)}
+                                />
+                                <FormHelperText id="component-error-text">e.g. example@domen.com</FormHelperText>
+                                <Input
+                                    className={classes.item}
+                                    name='password'
+                                    label='Password'
+                                    placeholder='password'
+                                    helperText = 'Only letter available'
+                                    required
+                                    value={this.state.password}
+                                    onChange={this.handlePasswordChange}
+                                    type='password'
+                                    error = {!this.isPasswordValid(this.state.password)}
+                                />
+                                <Input
+                                    className={classes.item}
+                                    name='repeatedPassword'
+                                    label='RepeatedPassword'
+                                    placeholder='repeated password'
+                                    type='password'
+                                    helperText = 'Only letter available'
+                                    required
+                                    value={this.state.repeatedPassword}
+                                    onChange={this.handleRepeatedPasswordChange}
+                                    error = {!this.isRepeatedPasswordValid(this.state.repeatedPassword)}
+                                />
 
                                 <Box className={classes.actions}>
                                     <Button
-                                        disabled = {this.isDisabled}
+                                        disabled = {!isEnabled}
                                         className={classes.btn}
                                         color='primary'
                                         type='submit'
