@@ -81,19 +81,7 @@ class Register extends Component {
         };
     }
 
-    // isNameValid = (name) => (name && (name.length < 25) && (/^[a-zA-Z]+$/).test(name)) ? undefined : 'Only letters available';
-    isNameValid = (name) => {
-        if (!name) {
-            return  'Please enter you first name';
-        }
-        if (!(/^[a-zA-Z]+$/).test(name)) {
-            return 'Only letters are allowed';
-        }
-        if (name.length > 25) {
-            return 'Too long input (max size 25)';
-        }
-        return undefined;
-    };
+    isNameValid = (name) => (/^[a-zA-Z]+$/).test(name);
 
 
     isSurnameValid = (surname) => (/^[a-zA-Z]+$/).test(surname);
@@ -140,12 +128,12 @@ class Register extends Component {
                         render={({handleSubmit}) => (
                             <form className={classes.container} onSubmit={handleSubmit}>
                                 <Field name='firstName'
-                                        validate = {this.isNameValid}
+
                                     >
-                                    {({input, meta}) => (
+                                    {({input, meta}) => console.log(meta) || (
                                         <TextField
-                                            error = {!!meta.error}
-                                            helperText = {meta.error}
+                                            error = {this.isNameValid(input)}
+                                            helperText = 'Only letter available'
                                             className={classes.item}
                                             name='firstName'
                                             label='First name'
@@ -223,7 +211,7 @@ class Register extends Component {
 
                                 <Box className={classes.actions}>
                                     <Button
-                                        disabled = {this.isDisabled()}
+                                        disabled = {this.isDisabled}
                                         className={classes.btn}
                                         color='primary'
                                         type='submit'
