@@ -195,7 +195,7 @@ class UserPage extends Component {
                                 }/>
 
 
-                            <input type="file" id="file-input" class="upload_input" accept="image/*"
+                            <input type="file" id="file-input" className="upload_input" accept="image/*"
                                    onChange={this.fileUploadHandler}/>
                             <label htmlFor="file-input">Upload photo</label>
                         </Box>

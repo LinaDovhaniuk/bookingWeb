@@ -6,9 +6,6 @@ import {connect} from "react-redux";
 import React, {Component} from "react";
 import {Field, Form} from "react-final-form";
 import TextField from "@material-ui/core/TextField";
-
-import { Input } from '@material-ui/core';
-import { FormHelperText } from '@material-ui/core';
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -73,7 +70,7 @@ const registerStyles = () => ({
 
 });
 
-class Register extends React.Component {
+class Register extends Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -81,75 +78,89 @@ class Register extends React.Component {
             lastName: '',
             username: '',
             email: '',
-            password:'',
-            repeatedPassword:''
         };
     }
 
-    isNameValid = (name) => (/^[a-zA-Z]+$/).test(name) &&  name.length>2;
-
-
-    isSurnameValid = (surname) => (/^[a-zA-Z]+$/).test(surname) &&  surname.length>2;
-
-
-    isUsernameValid = (username) => (/^[a-zA-Z0-9_]+$/).test(username) && username.length>4;
-
-
-    isEmailValid = (email) => (/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/).test(email);
-
-    isPasswordValid = (password) => password.length>=6;
-    isRepeatedPasswordValid = (password) => password===this.state.password && this.isPasswordValid(this.state.password);
-    // handleEmailChange = ({ target: { value }}) => {
-    //     this.setState({
-    //         email: value,
-    //     });
-    // };
-    //
-    // isPasswordValid = (password) => password === this.state.repeatedPassword;
-
-
-    //isDisabled = () => !(this.isNameValid(this.state.firstName) //&&
-       // this.isSurnameValid(this.state.lastName) &&
-       // this.isEmailValid(this.state.email) &&
-      //  this.isUsernameValid(this.state.username)
-    //);
-
-    handleNameChange = evt => this.setState({ firstName: evt.target.value });
-    handleLastNameChange = evt => this.setState({ lastName: evt.target.value });
-    handleUsernameChange = evt => this.setState({ username: evt.target.value });
-    handleEmailChange = evt => this.setState({ email: evt.target.value });
-    handlePasswordChange = evt => this.setState({ password: evt.target.value });
-    handleRepeatedPasswordChange = evt => this.setState({ repeatedPassword: evt.target.value });
-
-    onSubmit = (values) => {
-         history.replace('/username')
-    };
-
-    canBeSubmitted() {
-        const {firstName, lastName, username, email,password, repeatedPassword } = this.state;
-
-
-        return (
-            this.isNameValid(firstName) &&
-            this.isSurnameValid(lastName) &&
-            this.isUsernameValid(username) &&
-            this.isEmailValid(email) &&
-            this.isPasswordValid(password) &&
-            this.isRepeatedPasswordValid(repeatedPassword)
-        );
-    }
-
-    handleSubmit = (evt) => {
-        if (!this.canBeSubmitted()) {
-            evt.preventDefault();
-            return;
+    isNameValid = (name) => {
+        if (!name) {
+            return  'Please enter your first name';
         }
-        // actual submit logic...
+        if (!(/^[a-zA-Z]+$/).test(name)) {
+            return 'Only letters are allowed';
+        }
+        if (name.length > 25) {
+            return 'Too long input (max size 25)';
+        }
     };
+
+    isSurnameValid = (surname) => {
+        if (!surname) {
+            return  'Please enter your last name';
+        }
+        if (!(/^[a-zA-Z]+$/).test(surname)) {
+            return 'Only letters are allowed';
+        }
+        if (surname.length > 25) {
+            return 'Too long input (max size 25)';
+        }
+    };
+
+    isUsernameValid = (username) => {
+        if (!username) {
+            return  'Please enter your username';
+        }
+        if (!(/^[a-zA-Z0-9_]+$/).test(username)) {
+            return 'Only letters are allowed';
+        }
+        if (username.length > 25) {
+            return 'Too long input (max size 25)';
+        }
+    };
+
+    isEmailValid = (email) => {
+        if (!email) {
+            return  'Please enter you email: e.g user@gmail.com';
+        }
+        if (!(/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/).test(email)) {
+            return 'e.g user@gmail.com';
+        }
+        if (email.length > 25) {
+            return 'Too long input (max size 45)';
+        }
+    };
+
+    isPasswordValid = (password) => {
+        if (!password) {
+            return  'Please enter your password';
+        }
+        if (password.length < 6) {
+            return 'Password is too short (min size 6)';
+        }
+    };
+
+    isRepeatedPasswordValid = (repeatedPassword, values) => {
+        if (!repeatedPassword) {
+            return  'Please repeat your password';
+        }
+        if(repeatedPassword.length < 6) {
+            return 'Password is too short (min size 6)';
+        }
+        if (repeatedPassword !== values.password) {
+            return 'Password does not match';
+        }
+    };
+
+
+
+
+    onSubmit = async (values) => {
+
+        history.replace('/username')
+    };
+
 
     render() {
         const { classes } = this.props;
-        const isEnabled = this.canBeSubmitted(); //this.isNameValid(firstName);
         return (
             <div className={classes.rootContainer}>
                 <Card className={classes.card}>
@@ -160,93 +171,131 @@ class Register extends React.Component {
 
                     <Form
                         onSubmit={this.onSubmit}
-                        render={({handleSubmit}) => (
+                        render={({handleSubmit, invalid, ...data}) => console.log(data.submitting) || (
                             <form className={classes.container} onSubmit={handleSubmit}>
                                 <Field name='firstName'
+                                       validate = {this.isNameValid}
+                                >
+                                    {({input, meta}) => {
+                                        const error = ((meta.modified || meta.touched) && meta.error) || '';
+                                        return (
+                                            <TextField
+                                                error = {!!error}
+                                                helperText = {error}
+                                                className={classes.item}
+                                                name='firstName'
+                                                label='First name'
+                                                placeholder='Input text for a single line field'
+                                                required
+                                                {...input}
+                                            />
+                                        )
+                                    }}
+                                </Field>
+                                <Field name='lastName'
+                                       validate = {this.isSurnameValid}
+                                >
+                                    {({input, meta}) => {
+                                        const error = ((meta.modified || meta.touched) && meta.error) || '';
+                                        return (
+                                            <TextField
+                                                error = {!!error}
+                                                helperText = {error}
+                                                className={classes.item}
+                                                name='lastName'
+                                                label='Last name'
+                                                placeholder='Input text for a single line field'
+                                                required
+                                                {...input}
+                                            />
+                                        )}
+                                    }
+                                </Field>
+                                <Field name='username'
+                                       validate = {this.isUsernameValid}
+                                >
+                                    {({input, meta}) => {
+                                        const error = ((meta.modified || meta.touched) && meta.error) || '';
 
-                                    >
-                                    {({input, meta}) => console.log(meta) || (
-                                        <TextField
-                                            error = {this.isNameValid(input)}
-                                            helperText = 'Only letter available'
-                                            className={classes.item}
-                                            name='firstName'
-                                            label='First name'
-                                            placeholder='Input text for a single line field'
-                                            required
-                                            {...input}
-                                        />
-                                    )}
+                                        return (
+                                            <TextField
+                                                error = {!!error}
+                                                helperText = {error}
+                                                className={classes.item}
+                                                name='Username'
+                                                label='Username'
+                                                placeholder='Input text for a single line field'
+                                                required
+                                                {...input}
+                                            />
+                                        )}
+                                    }
+
                                 </Field>
-                                <Field name='lastName'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            error = {this.isSurnameValid(input)}
-                                            helperText = 'Only letter available'
-                                            className={classes.item}
-                                            name='lastName'
-                                            label='Last name'
-                                            placeholder='Input text for a single line field'
-                                            required
-                                            {...input}
-                                        />
-                                    )}
+                                <Field name='email'
+                                       validate = {this.isEmailValid}
+                                >
+                                    {({input, meta}) => {
+                                        const error = ((meta.modified || meta.touched) && meta.error) || '';
+                                        return (
+                                            <TextField
+                                                error = {!!error}
+                                                helperText = {error}
+                                                className={classes.item}
+                                                label='Email'
+                                                placeholder='Input text for a single line field'
+                                                required
+                                                {...input}
+                                            />
+                                        )}
+                                    }
+
                                 </Field>
-                                <Field name='username'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            error = {this.isUsernameValid(input)}
-                                            helperText = 'For example: User_name'
-                                            className={classes.item}
-                                            name='Username'
-                                            label='Username'
-                                            placeholder='Input text for a single line field'
-                                            required
-                                            {...input}
-                                        />
-                                    )}
+                                <Field name='password'
+                                       validate = {this.isPasswordValid}
+                                >
+                                    {({input, meta}) => {
+                                        const error = ((meta.modified || meta.touched) && meta.error) || '';
+
+                                        return (
+                                            <TextField
+                                                error = {!!error}
+                                                helperText = {error}
+                                                className={classes.item}
+                                                label='Password'
+                                                placeholder='Enter your password'
+                                                required
+                                                type='password'
+                                                {...input}
+                                            />
+                                        )}
+                                    }
+
                                 </Field>
-                                <Field name='email'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            error = {this.isEmailValid(input)}
-                                            helperText = 'For example: user.name@gmail.com'
-                                            className={classes.item}
-                                            label='Email'
-                                            placeholder='Input text for a single line field'
-                                            required
-                                            {...input}
-                                        />
-                                    )}
-                                </Field>
-                                <Field name='password'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            className={classes.item}
-                                            label='Password'
-                                            placeholder='Enter your password'
-                                            required
-                                            type='password'
-                                            {...input}
-                                        />
-                                    )}
-                                </Field>
-                                <Field name='repeatedPassword'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            className={classes.item}
-                                            label='Repeat your password'
-                                            placeholder='Repeat your password'
-                                            required
-                                            type='password'
-                                            {...input}
-                                        />
-                                    )}
+                                <Field name='repeatedPassword'
+                                    validate = {this.isRepeatedPasswordValid}
+                                >
+                                    {({input, meta}) =>  {
+                                        const error = ((meta.modified || meta.touched) && meta.error) || '';
+                                        return (
+                                            <TextField
+                                                error = {!!error}
+                                                helperText = {error}
+                                                className={classes.item}
+                                                label='Repeat your password'
+                                                placeholder='Repeat your password'
+                                                required
+                                                type='password'
+                                                {...input}
+                                            />
+                                        )}
+                                    }
+
                                 </Field>
 
                                 <Box className={classes.actions}>
                                     <Button
-                                        disabled = {!isEnabled}
+                                        disabled = {invalid}
                                         className={classes.btn}
                                         color='primary'
                                         type='submit'
@@ -269,3 +318,4 @@ class Register extends React.Component {
 }
 
 export default withStyles(registerStyles)(Register);
+
