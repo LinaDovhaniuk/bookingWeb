@@ -99,6 +99,7 @@ const userPageStyles = () => ({
             alignItems: 'flex-start',
             flexDirection: 'column',
             justifyContent: 'flex-start',
+            fontSize: 20,
             lineHeight: 1.5,
         },
         upload: {
