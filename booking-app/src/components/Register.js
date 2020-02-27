@@ -81,7 +81,19 @@ class Register extends Component {
         };
     }
 
-    isNameValid = (name) => (/^[a-zA-Z]+$/).test(name);
+    // isNameValid = (name) => (name && (name.length < 25) && (/^[a-zA-Z]+$/).test(name)) ? undefined : 'Only letters available';
+    isNameValid = (name) => {
+        if (!name) {
+            return  'Please enter you first name';
+        }
+        if (!(/^[a-zA-Z]+$/).test(name)) {
+            return 'Only letters are allowed';
+        }
+        if (name.length > 25) {
+            return 'Too long input (max size 25)';
+        }
+        return undefined;
+    };
 
 
     isSurnameValid = (surname) => (/^[a-zA-Z]+$/).test(surname);
@@ -92,12 +104,12 @@ class Register extends Component {
 
     isEmailValid = (email) => (/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/).test(email);
 
-    // handleEmailChange = ({ target: { value }}) => {
-    //     this.setState({
-    //         email: value,
-    //     });
-    // };
-    //
+    handleEmailChange = ({ target: { value }}) => {
+        this.setState({
+            email: value,
+        });
+    };
+
     // isPasswordValid = (password) => password === this.state.repeatedPassword;
 
 
@@ -109,7 +121,7 @@ class Register extends Component {
 
 
     onSubmit = (values) => {
-         history.replace('/properties')
+         history.replace('/username')
     };
 
 
@@ -127,11 +139,13 @@ class Register extends Component {
                         onSubmit={this.onSubmit}
                         render={({handleSubmit}) => (
                             <form className={classes.container} onSubmit={handleSubmit}>
-                                <Field name='firstName'>
-                                    {({input}) => (
+                                <Field name='firstName'
+                                        validate = {this.isNameValid}
+                                    >
+                                    {({input, meta}) => (
                                         <TextField
-                                            error = {this.isNameValid(input)}
-                                            helperText = 'Only letter available'
+                                            error = {!!meta.error}
+                                            helperText = {meta.error}
                                             className={classes.item}
                                             name='firstName'
                                             label='First name'
@@ -209,7 +223,7 @@ class Register extends Component {
 
                                 <Box className={classes.actions}>
                                     <Button
-                                        disabled = {this.isDisabled}
+                                        disabled = {this.isDisabled()}
                                         className={classes.btn}
                                         color='primary'
                                         type='submit'
