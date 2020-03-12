@@ -18,8 +18,11 @@
 .MuiButtonBase-root:hover{
     background-color: #077f74 !important;
 }
-
-
-
+.MuiButtonBase-root.DisapproveButton:hover{
+    background-color: red !important;
+}
+.MuiButtonBase-root.disapproveActions:hover{
+    background-color: red !important;
+}
 
 

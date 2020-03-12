@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import React, {Component} from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import Box from "@material-ui/core/Box";
-
+import styles from "../style/index.css"
 import {properties, comments, user} from '../data';
 import {Typography} from '@material-ui/core';
 import Comment from "../components/Comment";
@@ -60,6 +60,20 @@ const propertyPageStyles = () => ({
             fontFamily: 'Montserrat',
         }
     },
+    disapproveActions: {
+        width: 180,
+        display: 'flex',
+        flexDirection: 'column',
+        margin: 15,
+        borderRadius: '8%',
+        '& > *': {
+            width: 180,
+            backgroundColor: '#c82f63',
+            color: 'white',
+            fontFamily: 'Montserrat',
+        }
+
+    },
     card: {
         width: '80%',
         display: 'flex',
@@ -102,6 +116,8 @@ class PropertyPage extends Component {
         this.state = {
             property:  {...properties.items[0]},
         };
+        //this.adminType="admin";
+        this.userType="admin";
 
     }
 
@@ -129,16 +145,29 @@ class PropertyPage extends Component {
                         <Typography variant='h6'>{name}</Typography>
                         <div>{description}</div>
                     </Card>
-                    <Box className={classes.actions}>
-                        <Button>Reserve</Button>
-                    </Box>
+                    {
+                        this.userType==="admin" ?
+                            <fragment>
+                                <Box className={classes.actions}><Button>Approve</Button></Box>
+                                <Box className={classes.disapproveActions}>
+                                    <Button>Disapprove</Button>
+                                </Box>
+                            </fragment>
+                            : <fragment>
+                                <Box className={classes.actions}><Button>Reserve</Button></Box>
+                            </fragment>
+                    }
                 </Box>
-
-                <Box className={classes.comments}>
-                    <Typography variant='h4'>Comments</Typography>
-                    {comments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
-                    <AddComment/>
-                </Box>
+                {
+                    !(this.userType==="admin") ?
+                        <Box className={classes.comments}>
+                            <Typography variant='h4'>Comments</Typography>
+                            {comments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
+                            <AddComment/>
+                        </Box>
+                        :
+                        <fragment></fragment>
+                }
             </Box>
         )
     }

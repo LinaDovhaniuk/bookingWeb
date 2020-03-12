@@ -10,6 +10,7 @@ import SingUp from "./components/Register";
 import UserPage from "./containers/UserPage";
 import PropertiesList from "./containers/PropertiesList";
 import PropertyPage from "./containers/PropertyPage";
+
 import Navigation from "./containers/Navigation";
 import Box from "@material-ui/core/Box";
 
