@@ -57,9 +57,6 @@ class PropertiesList extends Component {
                 </Box>
                 <Box className={classes.properties}>
                     {properties.map( property =>  <Property key={`property-${property.id}`} property={property} />)}
-                    {/*<div className={classes.actions}>*/}
-                        {/*<Button>View more</Button>*/}
-                    {/*</div>*/}
                 </Box>
             </Box>
 
