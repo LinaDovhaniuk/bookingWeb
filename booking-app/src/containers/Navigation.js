@@ -1,15 +1,13 @@
-import {withRouter} from "react-router";
 import {compose} from "redux";
 import {connect} from "react-redux";
 import React, {Component, Fragment} from "react";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import {NavLink} from "react-router-dom";
-import PropTypes from "prop-types";
 import {withStyles} from "@material-ui/styles";
-import {user} from "../data";
+
+import { getAllProperties } from "../redux/actions";
 
 const navigationStyles = () => ({
     btn: {
@@ -56,9 +54,14 @@ const navigationStyles = () => ({
 });
 
 class Navigation extends Component {
+
     constructor(props) {
         super(props);
     }
+    componentDidMount() {
+        const { getAllProperties } = this.props;
+        getAllProperties();
+    };
 
     render() {
         const { classes } = this.props;
@@ -145,4 +148,9 @@ class Navigation extends Component {
 }
 
 
-export default withStyles(navigationStyles)(Navigation);
+
+
+export default compose(
+    withStyles(navigationStyles),
+    connect(null, { getAllProperties })
+)(Navigation);

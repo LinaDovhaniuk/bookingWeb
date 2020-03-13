@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Field, Form } from "react-final-form";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { addPropertyComment } from "../redux/actions";
 
 const addCommentStyles = () => ({
     mainBox: {
@@ -51,8 +52,12 @@ const addCommentStyles = () => ({
 
 class AddComment extends Component {
 
-    onSubmit = () => {
-        console.log('Sent');
+    onSubmit = (comment) => {
+        const { property :  {id}, addPropertyComment } = this.props;
+        addPropertyComment(id, comment.text);
+        return new Promise(resolve => {
+            setTimeout(resolve, 0);
+        })
     };
 
     render () {
@@ -66,16 +71,24 @@ class AddComment extends Component {
 
                     <Form
                         onSubmit={this.onSubmit}
-                        render={({handleSubmit}) => (
+                        render={({handleSubmit, form}) => (
                             <form
                                 className={classes.form}
-                                onSubmit={handleSubmit}>
-                                <Field name='comment'>
+                                onSubmit={event =>{
+                                const promise = handleSubmit(event);
+                                promise.then(() => {
+                                    form.reset();
+                                });
+                                return promise;
+                            }}
+                            >
+                                <Field name='text'>
                                     {({input}) => (
                                         <TextField
                                             placeholder='Leave your feedback here ...'
                                             required
                                             variant="outlined"
+                                            type = "text"
                                             multiline
                                             rows="6"
                                             {...input}
@@ -86,7 +99,9 @@ class AddComment extends Component {
                                     className={classes.btn}
                                     color='primary'
                                     type='submit'
-                                    variant='contained'>
+                                    variant='contained'
+
+                                >
                                     Send
                                 </Button>
 
@@ -102,5 +117,11 @@ class AddComment extends Component {
     }
 }
 
+const mapStateToProps = ({propertyData : { property }}) => ({
+    property,
+});
 
-export default withStyles(addCommentStyles)(AddComment);
+export default compose(
+    withStyles(addCommentStyles),
+    connect(mapStateToProps, { addPropertyComment })
+)(AddComment);

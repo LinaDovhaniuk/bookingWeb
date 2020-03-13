@@ -5,12 +5,14 @@ import { withRouter } from "react-router";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import React, { Component } from "react";
-import { makeStyles } from '@material-ui/core/styles';
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import ClampLines from 'react-clamp-lines';
 import withStyles from "@material-ui/core/styles/withStyles";
+import mapStateToProps from "react-redux/es/connect/mapStateToProps";
+
+import { getPropertyById, getPropertyComments } from "../redux/actions";
 
 const propertyStyles = () => ({
     cover: {
@@ -22,6 +24,7 @@ const propertyStyles = () => ({
         justifyContent: 'flex-start',
         marginTop: 10,
         fontFamily: 'Montserrat',
+        width: '100%',
     },
     image: {
         width: 250,
@@ -49,16 +52,32 @@ const propertyStyles = () => ({
 
 class Property extends Component {
 
+    constructor(props){
+        super(props);
+    }
+
+    getPropertyInfo = (id) => () => {
+      const { getPropertyById, getPropertyComments } = this.props;
+      getPropertyById(id);
+      getPropertyComments(id);
+    };
+
+
     render() {
-        const { classes, item }= this.props;
-        const {  id, name, description } = item;
+        const { classes, property }= this.props;
+        const {  id, name, description, cover_image_url } = property;
 
         return (
             <Card className={classes.card}>
                 <div >
                     <img
                         className={classes.image}
-                        src='https://image.freepik.com/foto-gratis/plano-geometrico-papel-azul-rosa-blanco-color-blanco-tres-fondos-al-lado_78774-433.jpg'/>
+                        src={cover_image_url
+                            ?
+                            cover_image_url
+                            :
+                            'https://image.freepik.com/foto-gratis/plano-geometrico-papel-azul-rosa-blanco-color-blanco-tres-fondos-al-lado_78774-433.jpg'
+                        }/>
                 </div>
                 <Box className={classes.info}>
                     <Typography variant='h5'>{name}</Typography>
@@ -70,6 +89,7 @@ class Property extends Component {
                         buttons={false}
                     />
                     <NavLink
+                        onClick = {this.getPropertyInfo(id)}
                         className={classes.link}
                         to = {`/properties/${id}`}
                     >
@@ -84,7 +104,6 @@ class Property extends Component {
 
 
 export default compose(
-    connect(null),
-    withRouter,
-    withStyles(propertyStyles)
+    withStyles(propertyStyles),
+    connect(null, { getPropertyComments, getPropertyById })
 )(Property);

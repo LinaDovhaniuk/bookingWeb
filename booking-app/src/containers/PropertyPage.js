@@ -1,27 +1,29 @@
-import {withRouter} from "react-router";
 
 import {compose} from "redux";
 import {connect} from "react-redux";
 import React, {Component} from "react";
-import {makeStyles} from '@material-ui/core/styles';
 import Box from "@material-ui/core/Box";
-
-import {properties, comments, user} from '../data';
 import {Typography} from '@material-ui/core';
 import Comment from "../components/Comment";
 import {Button} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Card from "@material-ui/core/Card";
 import AddComment from "./AddComment";
-import PropTypes from "prop-types";
 import {withStyles} from "@material-ui/styles";
+import { getPropertyById, getPropertyComments } from "../redux/actions";
+import { createSelector } from 'reselect';
+import propertyData from "../redux/reducers/property";
+
 
 const propertyPageStyles = () => ({
-    mainBox: {},
+    mainBox: {
+        width: '100%',
+    },
     photosBox: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginTop: '65px',
         width: '100%',
         '& > *': {
             width: '50%',
@@ -31,6 +33,7 @@ const propertyPageStyles = () => ({
         '& > *': {
             width: '100%',
             height: '100%',
+            maxHeight: 650,
         }
     },
     photos: {
@@ -46,12 +49,14 @@ const propertyPageStyles = () => ({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        color: '#565454',
     },
     actions: {
-        width: 180,
+        width: 350,
         display: 'flex',
         flexDirection: 'column',
-        margin: 15,
+        alignItems: 'center',
+        marginTop: 15,
         borderRadius: '8%',
         '& > *': {
             width: 180,
@@ -61,16 +66,17 @@ const propertyPageStyles = () => ({
         }
     },
     card: {
-        width: '80%',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
-        padding: 25,
-        margin: 10,
+        padding: 15,
+        marginTop: 10,
         lineHeight: 2,
         '& > *': {
             fontFamily: 'Montserrat',
+            color: '#565454',
         }
 
     },
@@ -80,7 +86,7 @@ const propertyPageStyles = () => ({
         flexDirection: 'column',
         width: '80%',
         alignItems: 'flex-start',
-        margin: 10,
+        marginTop: 20,
         '& > *': {
             fontFamily: 'Montserrat',
         }
@@ -99,22 +105,24 @@ class PropertyPage extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            property:  {...properties.items[0]},
-        };
-
     }
 
+
     render() {
-        const { classes } = this.props;
+        const { classes, property, propertyComments } = this.props;
         const [mainPhoto, ...restPhotos] = images;
-        const { id, name, description } = this.state.property;
+        const { name, description, cover_image_url } = property;
 
         return (
             <Box className={classes.mainBox}>
                 <Grid container className={classes.photosBox}>
                     <Grid className={classes.mainPhoto}>
-                        <img src={mainPhoto}/>
+                        <img src={cover_image_url
+                            ?
+                            cover_image_url
+                            :
+                            'https://image.freepik.com/foto-gratis/plano-geometrico-papel-azul-rosa-blanco-color-blanco-tres-fondos-al-lado_78774-433.jpg'
+                        }/>
                     </Grid>
                     <Grid container className={classes.photos}>
                         {restPhotos.map((img, index) => (
@@ -126,7 +134,7 @@ class PropertyPage extends Component {
                 </Grid>
                 <Box className={classes.info}>
                     <Card className={classes.card}>
-                        <Typography variant='h6'>{name}</Typography>
+                        <Typography variant='h5'>{name}</Typography>
                         <div>{description}</div>
                     </Card>
                     <Box className={classes.actions}>
@@ -136,7 +144,7 @@ class PropertyPage extends Component {
 
                 <Box className={classes.comments}>
                     <Typography variant='h4'>Comments</Typography>
-                    {comments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
+                    {propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
                     <AddComment/>
                 </Box>
             </Box>
@@ -144,5 +152,14 @@ class PropertyPage extends Component {
     }
 }
 
-export default withStyles(propertyPageStyles)(PropertyPage);
+
+const mapStateToProps = (state) => ({
+    property: state.propertyData.property,
+    propertyComments: state.propertyData.comments,
+});
+
+export default compose(
+    withStyles(propertyPageStyles),
+    connect(mapStateToProps)
+)(PropertyPage);
 

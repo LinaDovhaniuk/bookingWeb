@@ -62,9 +62,8 @@ const loginStyles = () => ({
 
 class Login extends Component {
     onSubmit = (values) => {
-        history.replace('/username');
+        history.replace('/cv');
         console.log('Send values to api/login');
-        //history.replace('/username');
     };
 
     render() {
@@ -126,11 +125,6 @@ class Login extends Component {
     }
 }
 
-
-
-Login.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(loginStyles)(Login);
 
