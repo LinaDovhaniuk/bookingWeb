@@ -10,9 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from "@material-ui/core/Card";
 import AddComment from "./AddComment";
 import {withStyles} from "@material-ui/styles";
-import { getPropertyById, getPropertyComments } from "../redux/actions";
-import { createSelector } from 'reselect';
-import propertyData from "../redux/reducers/property";
+
 
 
 const propertyPageStyles = () => ({
@@ -65,6 +63,13 @@ const propertyPageStyles = () => ({
             fontFamily: 'Montserrat',
         }
     },
+    disapproveActions: {
+        backgroundColor: '#c82f63',
+        marginTop: 15,
+        ':hover': {
+            backgroundColor: '#c82f63'
+        }
+    },
     card: {
         width: '100%',
         display: 'flex',
@@ -105,12 +110,16 @@ class PropertyPage extends Component {
 
     constructor(props) {
         super(props);
+
+        // this.adminType="admin";
+        this.userType="user";
+
     }
 
 
     render() {
         const { classes, property, propertyComments } = this.props;
-        const [mainPhoto, ...restPhotos] = images;
+        const [ ,...restPhotos] = images;
         const { name, description, cover_image_url } = property;
 
         return (
@@ -137,16 +146,65 @@ class PropertyPage extends Component {
                         <Typography variant='h5'>{name}</Typography>
                         <div>{description}</div>
                     </Card>
+
                     <Box className={classes.actions}>
                         <Button>Reserve</Button>
                     </Box>
                 </Box>
 
-                <Box className={classes.comments}>
-                    <Typography variant='h4'>Comments</Typography>
-                    {propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
-                    <AddComment/>
-                </Box>
+                {
+                    this.userType === 'admin'
+                        ? (
+                            <fragment>
+                            <Box className={classes.actions}>
+                                <Button>Approve</Button>
+                                <Button className={classes.disapproveActions}>Disapprove</Button>
+                            </Box>
+
+                        </fragment>
+                        ) : (
+                            <fragment>
+                                <Box className={classes.comments}>
+                                    <Typography variant='h4'>Comments</Typography>
+                                    {propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
+                                    <AddComment/>
+                                </Box>
+                            </fragment>
+                        )
+
+                }
+
+                {/*<Box className={classes.comments}>*/}
+                    {/*<Typography variant='h4'>Comments</Typography>*/}
+                    {/*{propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}*/}
+                    {/*<AddComment/>*/}
+
+                    {/*{*/}
+                        {/*this.userType==="admin" ?*/}
+                            {/*<fragment>*/}
+                                {/*<Box className={classes.actions}><Button>Approve</Button></Box>*/}
+                                {/*<Box className={classes.disapproveActions}>*/}
+                                    {/*<Button>Disapprove</Button>*/}
+                                {/*</Box>*/}
+                            {/*</fragment>*/}
+                            {/*: <fragment>*/}
+                                {/*<Box className={classes.actions}><Button>Reserve</Button></Box>*/}
+                            {/*</fragment>*/}
+                    {/*}*/}
+
+                {/*</Box>*/}
+                {/*{*/}
+                    {/*!(this.userType==="admin") ?*/}
+                        {/*<Box className={classes.comments}>*/}
+                            {/*<Typography variant='h4'>Comments</Typography>*/}
+                            {/*{propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}*/}
+                            {/*<AddComment/>*/}
+                        {/*</Box>*/}
+                        {/*:*/}
+                        {/*<fragment></fragment>*/}
+                {/*}*/}
+            {/*</Box> */}
+
             </Box>
         )
     }
