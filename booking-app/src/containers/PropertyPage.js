@@ -152,8 +152,7 @@ class PropertyPage extends Component {
                     </Box>
                 </Box>
 
-                {
-                    this.userType === 'admin'
+                { this.userType === 'admin'
                         ? (
                             <fragment>
                             <Box className={classes.actions}>
@@ -173,37 +172,6 @@ class PropertyPage extends Component {
                         )
 
                 }
-
-                {/*<Box className={classes.comments}>*/}
-                    {/*<Typography variant='h4'>Comments</Typography>*/}
-                    {/*{propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}*/}
-                    {/*<AddComment/>*/}
-
-                    {/*{*/}
-                        {/*this.userType==="admin" ?*/}
-                            {/*<fragment>*/}
-                                {/*<Box className={classes.actions}><Button>Approve</Button></Box>*/}
-                                {/*<Box className={classes.disapproveActions}>*/}
-                                    {/*<Button>Disapprove</Button>*/}
-                                {/*</Box>*/}
-                            {/*</fragment>*/}
-                            {/*: <fragment>*/}
-                                {/*<Box className={classes.actions}><Button>Reserve</Button></Box>*/}
-                            {/*</fragment>*/}
-                    {/*}*/}
-
-                {/*</Box>*/}
-                {/*{*/}
-                    {/*!(this.userType==="admin") ?*/}
-                        {/*<Box className={classes.comments}>*/}
-                            {/*<Typography variant='h4'>Comments</Typography>*/}
-                            {/*{propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}*/}
-                            {/*<AddComment/>*/}
-                        {/*</Box>*/}
-                        {/*:*/}
-                        {/*<fragment></fragment>*/}
-                {/*}*/}
-            {/*</Box> */}
 
             </Box>
         )
