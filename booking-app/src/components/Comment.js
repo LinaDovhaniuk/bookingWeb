@@ -1,14 +1,16 @@
-import { withRouter } from "react-router";
-import { compose } from "redux";
-import { connect } from "react-redux";
+
 import React, {Component} from "react";
-import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment'
 import Card from "@material-ui/core/Card";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
-import PropTypes from "prop-types";
 import {withStyles} from "@material-ui/styles";
-import {user} from "../data";
+import Rating from "@material-ui/lab/Rating";
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 
 const moodColor = {
     'negative': '#F11A4E',
@@ -32,8 +34,10 @@ const commentStyles = () => ({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 20,
+        padding: 10,
         marginTop: 15,
+        width: '100%',
+        color: '#565454',
     },
     infoBox: {
         display: 'flex',
@@ -41,15 +45,19 @@ const commentStyles = () => ({
         alignItems: 'space-between',
         marginLeft: 20,
         lineHeight: 1.5,
+        width: '100%',
+        color: '#565454',
     },
     mainInfo:{
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 5,
+        color: '#565454',
         ' & > *': {
-            fontSize: 20,
+            fontSize: 16,
             fontFamily: 'Montserrat',
+            color: '#565454',
         },
     },
     info: {
@@ -58,20 +66,62 @@ const commentStyles = () => ({
     },
     mood: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
+        alignItems: 'center',
     },
+    name: {
+        fontSize: 25,
+        fontFamily: 'Montserrat',
+        color: '#565454',
+    }
 
 });
+
+
+const customIcons = {
+    1: {
+        icon: <SentimentVeryDissatisfiedIcon />,
+        label: 'Very Dissatisfied',
+    },
+    2: {
+        icon: <SentimentDissatisfiedIcon />,
+        label: 'Dissatisfied',
+    },
+    3: {
+        icon: <SentimentSatisfiedIcon />,
+        label: 'Neutral',
+    },
+    4: {
+        icon: <SentimentSatisfiedAltIcon />,
+        label: 'Satisfied',
+    },
+    5: {
+        icon: <SentimentVerySatisfiedIcon />,
+        label: 'Very Satisfied',
+    },
+};
+
+function IconContainer(props) {
+    const { value, ...other } = props;
+    return <span {...other}>{customIcons[value].icon}</span>;
+}
+
 class Comment extends Component {
 
     constructor(props) {
         super(props);
     }
+
+    getMoodType = () => {
+        const { comment: { moodType } } = this.props;
+        if (moodType.toString() === 'positive') return 5;
+        if (moodType.toString() === 'negative') return 1;
+        if (moodType.toString() === 'neutral') return 3;
+    };
     render() {
         const { classes, comment } = this.props;
+        const { id, text, createdDate, moodType, author: { firstName, lastName } } = comment;
 
-
-        const { id, text, created_date, mood_type, author: { first_name, last_name } } = comment;
          return (
         <Card className = { classes.card }>
                 <Avatar
@@ -80,11 +130,18 @@ class Comment extends Component {
                 <Box className = { classes.infoBox }>
                     <Box className = {classes.mainInfo}>
                         <Box className = { classes.info }>
-                            <div>{first_name} {last_name}</div>
-                            <div>{created_date}</div>
+                            <div className={ classes.name }>{firstName} {lastName}</div>
+                            <div format="YYYY/MM/DD">{moment(new Date(createdDate.toString())).format("YYYY-MM-DD hh:mm:ss")}</div>
                         </Box>
                         <Box className = { classes.mood }>
-                            <div style = {{color: moodColor[mood_type]}}>{mood_type}</div>
+                            <Rating
+                                name="customized-icons"
+                                defaultValue={this.getMoodType()}
+                                getLabelText={value => customIcons[value].label}
+                                IconContainerComponent={IconContainer}
+                                readOnly
+                            />
+                            <div style = {{color: moodColor[moodType]}}>{moodType}</div>
                         </Box>
                     </Box>
                     <Box className = { classes.description }>{text}</Box>

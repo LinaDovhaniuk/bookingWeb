@@ -2,13 +2,11 @@ import {withRouter} from "react-router";
 import {compose} from "redux";
 import {connect} from "react-redux";
 import React, {Component} from "react";
-import {makeStyles} from '@material-ui/core/styles';
 
-import {properties, user} from '../data';
+
 import Property from "../components/Property";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import PropTypes from "prop-types";
 import {withStyles} from "@material-ui/styles";
 
 const listStyles = () => ({
@@ -46,24 +44,19 @@ class PropertiesList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            items: properties.items
-        };
     }
 
+
     render() {
-        const { classes } = this.props;
-        const { items } = this.state;
+        const { classes, properties } = this.props;
+
         return (
             <Box className={classes.mainBox}>
                 <Box className={classes.actions}>
                     <Button>Profile Settings</Button>
                 </Box>
                 <Box className={classes.properties}>
-                    {items.map( item =>  <Property key={`property-${item.id}`} item={item} />)}
-                    <div className={classes.actions}>
-                        <Button>View more</Button>
-                    </div>
+                    {properties.map( property =>  <Property key={`property-${property.id}`} property={property} />)}
                 </Box>
             </Box>
 
@@ -71,4 +64,12 @@ class PropertiesList extends Component {
     }
 }
 
-export default withStyles(listStyles)(PropertiesList);
+const mapStateToProps = ({ propertyData: {properties} }) => ({
+    properties
+});
+
+export default compose(
+    withStyles(listStyles),
+    connect(mapStateToProps)
+)(PropertiesList);
+
