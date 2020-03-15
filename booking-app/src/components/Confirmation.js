@@ -1,6 +1,6 @@
 import {withRouter} from "react-router";
 import {NavLink} from "react-router-dom";
-import { history } from '../redux/store';
+import {history} from '../redux/store';
 import {compose} from "redux";
 import {connect} from "react-redux";
 import React, {Component} from "react";
@@ -39,7 +39,8 @@ const loginStyles = () => ({
         alignItems: 'center',
         ' & > div': {
             color: '#656565',
-        }},
+        }
+    },
     item: {
         margin: 8,
         width: '100%',
@@ -70,14 +71,34 @@ const loginStyles = () => ({
 });
 
 class Login extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            'email': ''
+        };
+    }
+
     onSubmit = (values) => {
         history.replace('/username');
         console.log('Send confirmation code');
         //history.replace('/username');
     };
 
+
+    componentDidMount() {
+        this.setState({
+            email: this.props.location.state.email
+        })
+        console.log("componentDidMount ", this.props.location.state.email);
+        // this.props.initialize({email: 'some value here'});
+        // set the value individually
+        // this.props.dispatch(change('myFormName', 'anotherField', 'value'));
+    }
+
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
+        const email = 'asdasd@asdasd.com';
+        console.log('test@aasdasd.com');
         return (
             <div className={classes.rootContainer}>
                 <Card className={classes.card}>
@@ -91,12 +112,14 @@ class Login extends Component {
                                 <Field name='email'>
                                     {({input}) => (
                                         <TextField
+                                            value={this.state.email}
+                                            name='email'
                                             className={classes.item}
                                             label='Email'
                                             disabled={true}
                                             placeholder='Input text for a single line field'
                                             required
-                                            {...input}
+
                                         />
                                     )}
                                 </Field>
@@ -122,7 +145,7 @@ class Login extends Component {
                                         type='submit'
                                         variant='contained'
                                     >
-                                       Confirm
+                                        Confirm
                                     </Button>
                                 </Box>
                             </form>
@@ -136,7 +159,6 @@ class Login extends Component {
         );
     }
 }
-
 
 
 Login.propTypes = {

@@ -12,8 +12,10 @@ import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import {withStyles} from "@material-ui/styles";
 import awsconfig from './amf_config';
-import Amplify, { Auth } from 'aws-amplify';
-import { history } from '../redux/store';
+import Amplify, {Auth} from 'aws-amplify';
+import {history} from '../redux/store';
+// import {reduxForm, change} from 'redux-form';
+// import {connect} from 'react-redux';
 
 const registerStyles = () => ({
     rootContainer: {
@@ -72,20 +74,20 @@ const registerStyles = () => ({
 });
 
 class Register extends Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.state = {
             firstName: '',
             lastName: '',
             username: '',
             email: '',
-            userType:false
+            userType: false
         };
     }
 
     isNameValid = (name) => {
         if (!name) {
-            return  'Please enter your first name';
+            return 'Please enter your first name';
         }
         if (!(/^[a-zA-Z]+$/).test(name)) {
             return 'Only letters are allowed';
@@ -97,7 +99,7 @@ class Register extends Component {
 
     isSurnameValid = (surname) => {
         if (!surname) {
-            return  'Please enter your last name';
+            return 'Please enter your last name';
         }
         if (!(/^[a-zA-Z]+$/).test(surname)) {
             return 'Only letters are allowed';
@@ -109,7 +111,7 @@ class Register extends Component {
 
     isUsernameValid = (username) => {
         if (!username) {
-            return  'Please enter your username';
+            return 'Please enter your username';
         }
         if (!(/^[a-zA-Z0-9_]+$/).test(username)) {
             return 'Only letters are allowed';
@@ -120,8 +122,11 @@ class Register extends Component {
     };
 
     isEmailValid = (email) => {
+        this.setState({
+            'email': email
+        })
         if (!email) {
-            return  'Please enter you email: e.g user@gmail.com';
+            return 'Please enter you email: e.g user@gmail.com';
         }
         if (!(/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/).test(email)) {
             return 'e.g user@gmail.com';
@@ -129,11 +134,13 @@ class Register extends Component {
         if (email.length > 25) {
             return 'Too long input (max size 45)';
         }
+
+        console.log(this.state);
     };
 
     isPasswordValid = (password) => {
         if (!password) {
-            return  'Please enter your password';
+            return 'Please enter your password';
         }
         if (password.length < 6) {
             return 'Password is too short (min size 6)';
@@ -142,9 +149,9 @@ class Register extends Component {
 
     isRepeatedPasswordValid = (repeatedPassword, values) => {
         if (!repeatedPassword) {
-            return  'Please repeat your password';
+            return 'Please repeat your password';
         }
-        if(repeatedPassword.length < 6) {
+        if (repeatedPassword.length < 6) {
             return 'Password is too short (min size 6)';
         }
         if (repeatedPassword !== values.password) {
@@ -152,8 +159,7 @@ class Register extends Component {
         }
     };
 
-    registerUser=()=>
-    {
+    registerUser = () => {
 
         Amplify.configure({
             Auth: {
@@ -165,22 +171,24 @@ class Register extends Component {
         });
 
 // You can get the current config object
-        var username="testUsername";
+        var username = "testUsername";
         var password = "Longpassword!1";
 
         Auth.signUp({
             username,
             password,
             attributes: {
-                email:"den5096@gmail.com"
+                email: "den5096@gmail.com"
             },
         })
             .then(data => console.log(data))
             .catch(err => console.log(err));
 
-        const user =  Auth.signIn(username, password);
-        console.log(user);
-        history.replace('/confirm');
+        const user = Auth.signIn(username, password);
+        console.log("user ", user);
+        this.props.history.push('/confirm', {email: this.state.email});
+        // history.replace('/confirm');
+        console.log('confirm ', this.state.email);
     };
 
 
@@ -190,7 +198,7 @@ class Register extends Component {
 
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         return (
             <div className={classes.rootContainer}>
                 <Card className={classes.card}>
@@ -204,14 +212,14 @@ class Register extends Component {
                         render={({handleSubmit, invalid, ...data}) => console.log(data.submitting) || (
                             <form className={classes.container} onSubmit={handleSubmit}>
                                 <Field name='firstName'
-                                       validate = {this.isNameValid}
+                                       validate={this.isNameValid}
                                 >
                                     {({input, meta}) => {
                                         const error = ((meta.modified || meta.touched) && meta.error) || '';
                                         return (
                                             <TextField
-                                                error = {!!error}
-                                                helperText = {error}
+                                                error={!!error}
+                                                helperText={error}
                                                 className={classes.item}
                                                 name='firstName'
                                                 label='First name'
@@ -223,14 +231,14 @@ class Register extends Component {
                                     }}
                                 </Field>
                                 <Field name='lastName'
-                                       validate = {this.isSurnameValid}
+                                       validate={this.isSurnameValid}
                                 >
                                     {({input, meta}) => {
                                         const error = ((meta.modified || meta.touched) && meta.error) || '';
                                         return (
                                             <TextField
-                                                error = {!!error}
-                                                helperText = {error}
+                                                error={!!error}
+                                                helperText={error}
                                                 className={classes.item}
                                                 name='lastName'
                                                 label='Last name'
@@ -238,19 +246,20 @@ class Register extends Component {
                                                 required
                                                 {...input}
                                             />
-                                        )}
+                                        )
+                                    }
                                     }
                                 </Field>
                                 <Field name='username'
-                                       validate = {this.isUsernameValid}
+                                       validate={this.isUsernameValid}
                                 >
                                     {({input, meta}) => {
                                         const error = ((meta.modified || meta.touched) && meta.error) || '';
 
                                         return (
                                             <TextField
-                                                error = {!!error}
-                                                helperText = {error}
+                                                error={!!error}
+                                                helperText={error}
                                                 className={classes.item}
                                                 name='Username'
                                                 label='Username'
@@ -258,39 +267,47 @@ class Register extends Component {
                                                 required
                                                 {...input}
                                             />
-                                        )}
+                                        )
+                                    }
                                     }
 
                                 </Field>
                                 <Field name='email'
-                                       validate = {this.isEmailValid}
+                                       onChange={(e) => {
+                                           console.log("e ", e);
+                                       }}
+                                       validate={this.isEmailValid}
                                 >
                                     {({input, meta}) => {
                                         const error = ((meta.modified || meta.touched) && meta.error) || '';
                                         return (
                                             <TextField
-                                                error = {!!error}
-                                                helperText = {error}
+                                                onChange={(e) => {
+                                                    console.log('e ', e);
+                                                }}
+                                                error={!!error}
+                                                helperText={error}
                                                 className={classes.item}
                                                 label='Email'
                                                 placeholder='Input text for a single line field'
                                                 required
                                                 {...input}
                                             />
-                                        )}
+                                        )
+                                    }
                                     }
 
                                 </Field>
                                 <Field name='password'
-                                       validate = {this.isPasswordValid}
+                                       validate={this.isPasswordValid}
                                 >
                                     {({input, meta}) => {
                                         const error = ((meta.modified || meta.touched) && meta.error) || '';
 
                                         return (
                                             <TextField
-                                                error = {!!error}
-                                                helperText = {error}
+                                                error={!!error}
+                                                helperText={error}
                                                 className={classes.item}
                                                 label='Password'
                                                 placeholder='Enter your password'
@@ -298,19 +315,20 @@ class Register extends Component {
                                                 type='password'
                                                 {...input}
                                             />
-                                        )}
+                                        )
+                                    }
                                     }
 
                                 </Field>
                                 <Field name='repeatedPassword'
-                                    validate = {this.isRepeatedPasswordValid}
+                                       validate={this.isRepeatedPasswordValid}
                                 >
-                                    {({input, meta}) =>  {
+                                    {({input, meta}) => {
                                         const error = ((meta.modified || meta.touched) && meta.error) || '';
                                         return (
                                             <TextField
-                                                error = {!!error}
-                                                helperText = {error}
+                                                error={!!error}
+                                                helperText={error}
                                                 className={classes.item}
                                                 label='Repeat your password'
                                                 placeholder='Repeat your password'
@@ -318,14 +336,15 @@ class Register extends Component {
                                                 type='password'
                                                 {...input}
                                             />
-                                        )}
+                                        )
+                                    }
                                     }
 
                                 </Field>
 
                                 <Box className={classes.actions}>
                                     <Button
-                                        disabled = {invalid}
+                                        disabled={invalid}
                                         className={classes.btn}
                                         color='primary'
                                         type='submit'
