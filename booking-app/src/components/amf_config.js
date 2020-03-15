@@ -13,16 +13,3 @@ Amplify.configure({
 
 // You can get the current config object
 const currentConfig = Auth.configure();
-var username="testUsername";
-var password = "testPassword";
-
-Auth.signUp({
-    username,
-    password,
-    attributes: {
-    },
-})
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
-
-const user = await Auth.signIn(username, password);

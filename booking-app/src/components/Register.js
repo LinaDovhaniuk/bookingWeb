@@ -9,9 +9,10 @@ import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-
 import Card from "@material-ui/core/Card";
 import {withStyles} from "@material-ui/styles";
+import awsconfig from './amf_config';
+import Amplify, { Auth } from 'aws-amplify';
 import { history } from '../redux/store';
 
 const registerStyles = () => ({
@@ -78,6 +79,7 @@ class Register extends Component {
             lastName: '',
             username: '',
             email: '',
+            userType:false
         };
     }
 
@@ -150,12 +152,40 @@ class Register extends Component {
         }
     };
 
+    registerUser=()=>
+    {
 
+        Amplify.configure({
+            Auth: {
+                region: 'eu-central-1',
+                userPoolId: 'eu-central-1_sXobUjqVh',
+                userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
+                //redirectUrl: 'http://localhost:3000',
+            }
+        });
+
+// You can get the current config object
+        var username="testUsername";
+        var password = "Longpassword!1";
+
+        Auth.signUp({
+            username,
+            password,
+            attributes: {
+                email:"den5096@gmail.com"
+            },
+        })
+            .then(data => console.log(data))
+            .catch(err => console.log(err));
+
+        const user =  Auth.signIn(username, password);
+        console.log(user);
+        history.replace('/confirm');
+    };
 
 
     onSubmit = async (values) => {
-
-        history.replace('/username')
+        await this.registerUser();//history.replace('/username')
     };
 
 
@@ -299,7 +329,8 @@ class Register extends Component {
                                         className={classes.btn}
                                         color='primary'
                                         type='submit'
-                                        variant='contained'>
+                                        variant='contained'
+                                    >
                                         Sign up
                                     </Button>
                                     <NavLink className={classes.link} to='/login'>
