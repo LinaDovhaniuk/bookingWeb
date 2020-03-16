@@ -3,6 +3,7 @@ import {
     GET_PROPERTY_COMMENTS_SUCCESS,
     GET_PROPERTY_BY_ID_SUCCESS,
     ADD_PROPERTY_COMMENT_SUCCESS,
+    LOGIN_USER_SUCCESS,
 } from './types';
 
 export const getAllProperties =  () =>
@@ -75,3 +76,7 @@ export const addPropertyCommentSuccess = (data) => ({
     payload: data,
 });
 
+export const loginUserSuccess = (user) => ({
+    type: LOGIN_USER_SUCCESS,
+    payload: user,
+});

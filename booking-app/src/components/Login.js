@@ -13,6 +13,8 @@ import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
 import PropTypes from "prop-types";
 import {withStyles} from "@material-ui/styles";
+import {loginUserSuccess} from "../redux/actions";
+import Amplify, {Auth} from "aws-amplify";
 
 const loginStyles = () => ({
     rootContainer: {
@@ -61,9 +63,37 @@ const loginStyles = () => ({
 });
 
 class Login extends Component {
-    onSubmit = (values) => {
-        history.replace('/cv');
-        console.log('Send values to api/login');
+     onSubmit =  async (values) => {
+        Amplify.configure({
+            Auth: {
+                region: 'eu-central-1',
+                userPoolId: 'eu-central-1_sXobUjqVh',
+                userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
+                //redirectUrl: 'http://localhost:3000',
+            }
+        });
+        const authUser = await Auth.signIn(values.email, values.password);
+        console.log("authUser");
+        console.log( await Auth.currentSession());
+        const tocken= await Auth.currentSession();
+         const response = await fetch (
+             `https://api.booking.knine.xyz/customers/profile`,
+             {
+                 headers: {
+                     'Authorization': 'Bearer ' + tocken.idToken.jwtToken,
+                 },
+                 method: 'GET'
+             });
+         const userInfo=(await response.json());
+         console.log( userInfo);
+         //console.log( await response.json().username);
+        // console.log( await response.json().PromiseValue);
+        const { loginUserSuccess } = this.props;
+        loginUserSuccess(userInfo);
+        history.replace('/username');
+        const { user } = this.props;
+        console.log(user);
+        //console.log('Send values to api/login');
     };
 
     render() {
@@ -79,7 +109,7 @@ class Login extends Component {
                                     {({input}) => (
                                         <TextField
                                             className={classes.item}
-                                            label='Email'
+                                            label='Username'
                                             placeholder='Input text for a single line field'
                                             required
                                             {...input}
@@ -126,5 +156,11 @@ class Login extends Component {
 }
 
 
-export default withStyles(loginStyles)(Login);
+const mapStateToProps = ({userData : { user }}) => ({
+    user,
+});
 
+export default compose(
+    withStyles(loginStyles),
+    connect(mapStateToProps, { loginUserSuccess})
+)(Login);

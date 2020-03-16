@@ -110,10 +110,8 @@ class PropertyPage extends Component {
 
     constructor(props) {
         super(props);
-
         // this.adminType="admin";
         this.userType="user";
-
     }
 
 
@@ -162,13 +160,13 @@ class PropertyPage extends Component {
 
                         </fragment>
                         ) : (
-                            <fragment>
+                            //<fragment>
                                 <Box className={classes.comments}>
                                     <Typography variant='h4'>Comments</Typography>
                                     {propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
                                     <AddComment/>
                                 </Box>
-                            </fragment>
+                          //  </fragment>
                         )
 
                 }

@@ -38,6 +38,13 @@ class App extends Component {
     }
 }
 
+const mapStateToProps = ({userData : { user }}) => ({
+    user,
+});
 
+export default withRouter(compose(
+    connect(mapStateToProps)
+)(App));
+//
+// export default withRouter(App);
 
-export default withRouter(App);

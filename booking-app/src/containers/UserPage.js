@@ -15,6 +15,8 @@ import PropTypes from 'prop-types';
 import '../style/index.css'
 import {user} from '../data'
 
+import {loginUserSuccess} from "../redux/actions";
+
 
 const userPageStyles = () => ({
         mainBox: {
@@ -173,6 +175,12 @@ class UserPage extends Component {
 
 
     render() {
+        //const { loginUserSuccess } = this.props;
+        //history.replace('/username');
+        const { user } = this.props;
+        console.log("user olololo");
+        console.log(user);
+        console.log(user.email);
         const {classes} = this.props;
         const {firstName, lastName, username, email, rating, image} = this.state;
         return (
@@ -201,14 +209,15 @@ class UserPage extends Component {
                         </Box>
                         <Box className={classes.info}>
                             <Box className={classes.usernameInfo}>
-                                <div>{firstName} {lastName}</div>
-                                <div>Username</div>
-                                <div>Email</div>
+                                <div>{user.firstName} {user.lastName}</div>
+                                <div>{user.username}</div>
+                                <div>{user.email}</div>
                             </Box>
                             <Box className={classes.usernameInfo}>
                                 <Rating name="read-only" value={rating} readOnly/>
                                 <div>{window.location.href}</div>
-                                <div>{email}</div>
+                                {//<div>{user.email}</div>
+                                }
                             </Box>
                         </Box>
                     </Box>
@@ -221,8 +230,15 @@ class UserPage extends Component {
 }
 
 
-export default withStyles(userPageStyles)(UserPage);
+// export default withStyles(userPageStyles)(UserPage);
 
 
+const mapStateToProps = ({userData : { user }}) => ({
+    user,
+});
 
+export default compose(
+    withStyles(userPageStyles),
+    connect(mapStateToProps, { loginUserSuccess})
+)(UserPage);
 

@@ -10,6 +10,7 @@ import Box from "@material-ui/core/Box";
 import {Form, Field} from 'react-final-form';
 import TextField from "@material-ui/core/TextField";
 
+import Amplify, {Auth} from 'aws-amplify';
 import Card from "@material-ui/core/Card";
 import PropTypes from "prop-types";
 import {withStyles} from "@material-ui/styles";
@@ -79,7 +80,21 @@ class Login extends Component {
     }
 
     onSubmit = (values) => {
-        history.replace('/username');
+        Amplify.configure({
+            Auth: {
+                region: 'eu-central-1',
+                userPoolId: 'eu-central-1_sXobUjqVh',
+                userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
+                //redirectUrl: 'http://localhost:3000',
+            }
+        });
+        console.log("values on confirmation");
+        console.log(values);
+        Auth.confirmSignUp(values.email, values.confirmation, {
+            // Optional. Force user confirmation irrespective of existing alias. By default set to True.
+            forceAliasCreation: true
+        }).then(data => console.log(data))
+            .catch(err => console.log(err));
         console.log('Send confirmation code');
         //history.replace('/username');
     };
@@ -107,35 +122,39 @@ class Login extends Component {
                     </div>
                     <Form
                         onSubmit={this.onSubmit}
-                        render={({handleSubmit}) => (
+                        render={({handleSubmit, invalid, ...data}) => console.log(data.submitting) || (
                             <form className={classes.container} onSubmit={handleSubmit}>
                                 <Field name='email'>
-                                    {({input}) => (
-                                        <TextField
-                                            value={this.state.email}
-                                            name='email'
-                                            className={classes.item}
-                                            label='Email'
-                                            disabled={true}
-                                            placeholder='Input text for a single line field'
-                                            required
-
-                                        />
-                                    )}
+                                    {({input, meta}) => {
+                                        return (
+                                                <TextField
+                                                    value={this.state.email}
+                                                    name='email'
+                                                    className={classes.item}
+                                                    label='Username'
+                                                   // disabled={true}
+                                                    placeholder='Input text for a single line field'
+                                                    required
+                                                   {...input}
+                                                />
+                                            )
+                                    }}
                                 </Field>
                                 <Field name='confirmation'>
-                                    {({input, meta}) => (
-                                        <TextField
-                                            className={classes.item}
-                                            name='password'
-                                            label='Confirmation code'
-                                            placeholder='Enter code'
-                                            required
-                                            type='text'
+                                    {({input, meta}) => {
+                                        return (
+                                            <TextField
+                                                //value={this.state.email}
 
-                                            {...input}
-                                        />
-                                    )}
+                                                name='confirmation'
+                                                className={classes.item}
+                                                label='Confirmation code'
+                                                placeholder='Enter code'
+                                                required
+                                                {...input}
+                                            />
+                                        )
+                                    }}
                                 </Field>
 
                                 <Box className={classes.actions}>

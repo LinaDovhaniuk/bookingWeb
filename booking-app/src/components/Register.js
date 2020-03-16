@@ -145,6 +145,10 @@ class Register extends Component {
         if (password.length < 6) {
             return 'Password is too short (min size 6)';
         }
+        // if(!(/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/).test(password))
+        // {
+        //     return 'invalid password format (you need to have at least 1 capital letter, 1 special symbol, 1 digit)';
+        // }
     };
 
     isRepeatedPasswordValid = (repeatedPassword, values) => {
@@ -186,14 +190,40 @@ class Register extends Component {
 
         const user = Auth.signIn(username, password);
         console.log("user ", user);
-        this.props.history.push('/confirm', {email: this.state.email});
+        this.props.history.push('/confirm', {email:'qweqwe'});
         // history.replace('/confirm');
         console.log('confirm ', this.state.email);
     };
 
 
-    onSubmit = async (values) => {
-        await this.registerUser();//history.replace('/username')
+    onSubmit = (values) => {
+        console.log(values);
+        console.log("reg values");
+        Amplify.configure({
+            Auth: {
+                region: 'eu-central-1',
+                userPoolId: 'eu-central-1_sXobUjqVh',
+                userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
+                //redirectUrl: 'http://localhost:3000',
+            }
+        });
+
+// You can get the current config object
+        var username = values.username;
+        var password = values.password;
+
+        Auth.signUp({
+            username,
+            password,
+            attributes: {
+                given_name: values.firstName,
+                family_name: values.lastName,
+                email: values.email
+            },
+        })
+            .then(data => console.log(data))
+            .catch(err => console.log(err));
+        this.props.history.push('/confirm', {email:values.username});
     };
 
 
