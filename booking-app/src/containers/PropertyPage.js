@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from "@material-ui/core/Card";
 import AddComment from "./AddComment";
 import {withStyles} from "@material-ui/styles";
+import {loginUserSuccess, setUserTypeSuccess} from "../redux/actions";
 
 
 
@@ -119,7 +120,7 @@ class PropertyPage extends Component {
         const { classes, property, propertyComments } = this.props;
         const [ ,...restPhotos] = images;
         const { name, description, cover_image_url } = property;
-
+        const { type } = this.props;
         return (
             <Box className={classes.mainBox}>
                 <Grid container className={classes.photosBox}>
@@ -146,7 +147,8 @@ class PropertyPage extends Component {
                     </Card>
 
                     <Box className={classes.actions}>
-                        <Button>Reserve</Button>
+                        {type && type.userType==='User' ? <Button>Reserve</Button> : <Button disabled >Reserve</Button>}
+
                     </Box>
                 </Box>
 
@@ -164,7 +166,9 @@ class PropertyPage extends Component {
                                 <Box className={classes.comments}>
                                     <Typography variant='h4'>Comments</Typography>
                                     {propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
-                                    <AddComment/>
+                                    {
+                                       type && type.userType==='User' ? (<AddComment/>) :(<fragment/>)
+                                    }
                                 </Box>
                           //  </fragment>
                         )
@@ -182,8 +186,14 @@ const mapStateToProps = (state) => ({
     propertyComments: state.propertyData.comments,
 });
 
+const mapStateToProps2 = ({userData : { user, type }}) => ({
+    user,
+    type,
+});
+
 export default compose(
     withStyles(propertyPageStyles),
-    connect(mapStateToProps)
+    connect(mapStateToProps),
+    connect(mapStateToProps2, { loginUserSuccess, setUserTypeSuccess })
 )(PropertyPage);
 

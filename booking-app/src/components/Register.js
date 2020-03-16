@@ -199,14 +199,27 @@ class Register extends Component {
     onSubmit = (values) => {
         console.log(values);
         console.log("reg values");
-        Amplify.configure({
-            Auth: {
-                region: 'eu-central-1',
-                userPoolId: 'eu-central-1_sXobUjqVh',
-                userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
-                //redirectUrl: 'http://localhost:3000',
-            }
-        });
+
+        if(values.userType=="User") {
+            Amplify.configure({
+                Auth: {
+                    region: 'eu-central-1',
+                    userPoolId: 'eu-central-1_sXobUjqVh',
+                    userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
+                    //redirectUrl: 'http://localhost:3000',
+                }
+            });
+        }
+        else {
+            Amplify.configure({
+                Auth: {
+                    region: 'eu-central-1',
+                    userPoolId: 'eu-central-1_pPGEanitH',
+                    userPoolWebClientId: '4o98dleg8r6uqi1g09ctoua1cg',
+                    //redirectUrl: 'http://localhost:3000',
+                }
+            });
+        }
 
 // You can get the current config object
         var username = values.username;
@@ -328,6 +341,7 @@ class Register extends Component {
                                     }
 
                                 </Field>
+
                                 <Field name='password'
                                        validate={this.isPasswordValid}
                                 >
@@ -371,7 +385,14 @@ class Register extends Component {
                                     }
 
                                 </Field>
-
+                                <div className={classes.item}>
+                                    { //<label  >User type </label>
+                                         }
+                                    <Field name="userType" defaultValue={"User"}  className={classes.item} component="select">
+                                        <option value="Host">Host</option>
+                                        <option value="User">User</option>
+                                    </Field>
+                                </div>
                                 <Box className={classes.actions}>
                                     <Button
                                         disabled={invalid}

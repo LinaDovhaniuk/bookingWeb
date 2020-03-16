@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import '../style/index.css'
 import {user} from '../data'
 
-import {loginUserSuccess} from "../redux/actions";
+import {loginUserSuccess, setUserTypeSuccess} from "../redux/actions";
 
 
 const userPageStyles = () => ({
@@ -178,9 +178,10 @@ class UserPage extends Component {
         //const { loginUserSuccess } = this.props;
         //history.replace('/username');
         const { user } = this.props;
+
         console.log("user olololo");
         console.log(user);
-        console.log(user.email);
+        const {type} =  this.props;
         const {classes} = this.props;
         const {firstName, lastName, username, email, rating, image} = this.state;
         return (
@@ -212,6 +213,7 @@ class UserPage extends Component {
                                 <div>{user.firstName} {user.lastName}</div>
                                 <div>{user.username}</div>
                                 <div>{user.email}</div>
+                                <div>{"User type: "+type.userType}</div>
                             </Box>
                             <Box className={classes.usernameInfo}>
                                 <Rating name="read-only" value={rating} readOnly/>
@@ -232,13 +234,12 @@ class UserPage extends Component {
 
 // export default withStyles(userPageStyles)(UserPage);
 
-
-const mapStateToProps = ({userData : { user }}) => ({
+const mapStateToProps = ({userData : { user, type }}) => ({
     user,
+    type,
 });
 
 export default compose(
     withStyles(userPageStyles),
-    connect(mapStateToProps, { loginUserSuccess})
+    connect(mapStateToProps, { loginUserSuccess, setUserTypeSuccess })
 )(UserPage);
-

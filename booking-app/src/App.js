@@ -14,13 +14,15 @@ import PropertyPage from "./containers/PropertyPage";
 
 import Navigation from "./containers/Navigation";
 import Box from "@material-ui/core/Box";
+import {loginUserSuccess, setUserTypeSuccess} from "./redux/actions";
 
 
 class App extends Component {
 
     render () {
         const username = 'username';
-
+        const { user } = this.props;
+        const {type} =  this.props;
         return (
             <Box>
                 <Navigation/>
@@ -28,7 +30,7 @@ class App extends Component {
                     <Route exact component = { Login } path = '/login' />
                     <Route exact component = { SingUp } path = '/register' />
                     <Route exact component = { Confirm } path = '/confirm' />
-                    <Route exact component = { UserPage } path = {`/${username}`} />
+                    <Route exact component = { UserPage } path = {`/${user.username}`} />
                     <Route exact component = { PropertiesList } path = '/properties' />
                     <Route exact component = { PropertyPage } path = '/properties/:id' />
                     <Redirect to= '/properties'/>
@@ -38,13 +40,21 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = ({userData : { user }}) => ({
-    user,
-});
-
-export default withRouter(compose(
-    connect(mapStateToProps)
-)(App));
+// const mapStateToProps = ({userData : { user }}) => ({
+//     user,
+// });
+//
+// export default withRouter(compose(
+//     connect(mapStateToProps)
+// )(App));
 //
 // export default withRouter(App);
 
+const mapStateToProps = ({userData : { user, type }}) => ({
+    user,
+    type,
+});
+
+export default compose(
+    connect(mapStateToProps, { loginUserSuccess, setUserTypeSuccess })
+)(App);

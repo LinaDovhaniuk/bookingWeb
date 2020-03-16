@@ -80,14 +80,26 @@ class Login extends Component {
     }
 
     onSubmit = (values) => {
-        Amplify.configure({
-            Auth: {
-                region: 'eu-central-1',
-                userPoolId: 'eu-central-1_sXobUjqVh',
-                userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
-                //redirectUrl: 'http://localhost:3000',
-            }
-        });
+        if(values.userType=="User") {
+            Amplify.configure({
+                Auth: {
+                    region: 'eu-central-1',
+                    userPoolId: 'eu-central-1_sXobUjqVh',
+                    userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
+                    //redirectUrl: 'http://localhost:3000',
+                }
+            });
+        }
+        else {
+            Amplify.configure({
+                Auth: {
+                    region: 'eu-central-1',
+                    userPoolId: 'eu-central-1_pPGEanitH',
+                    userPoolWebClientId: '4o98dleg8r6uqi1g09ctoua1cg',
+                    //redirectUrl: 'http://localhost:3000',
+                }
+            });
+        }
         console.log("values on confirmation");
         console.log(values);
         Auth.confirmSignUp(values.email, values.confirmation, {
@@ -96,7 +108,7 @@ class Login extends Component {
         }).then(data => console.log(data))
             .catch(err => console.log(err));
         console.log('Send confirmation code');
-        //history.replace('/username');
+        history.replace('/Login');
     };
 
 
@@ -140,6 +152,14 @@ class Login extends Component {
                                             )
                                     }}
                                 </Field>
+                                <div className={classes.item}>
+                                    { //<label  >User type </label>
+                                    }
+                                    <Field name="userType" defaultValue={"User"} className={classes.item} component="select">
+                                        <option value="Host">Host</option>
+                                        <option value="User">User</option>
+                                    </Field>
+                                </div>
                                 <Field name='confirmation'>
                                     {({input, meta}) => {
                                         return (

@@ -6,8 +6,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import {NavLink} from "react-router-dom";
 import {withStyles} from "@material-ui/styles";
-
-import { getAllProperties } from "../redux/actions";
+import { Auth } from 'aws-amplify';
+import {getAllProperties, loginUserSuccess, setUserTypeSuccess} from "../redux/actions";
 
 const navigationStyles = () => ({
     btn: {
@@ -57,14 +57,24 @@ class Navigation extends Component {
 
     constructor(props) {
         super(props);
-    }
+    };
+
     componentDidMount() {
-        const { getAllProperties } = this.props;
+        const {getAllProperties} = this.props;
         getAllProperties();
+    };
+
+    signOutUser()
+    {
+        // Auth.signOut()
+        //     .then(data => console.log(data))
+        //     .catch(err => console.log(err));
     };
 
     render() {
         const { classes } = this.props;
+        const {user} = this.props;
+        //console.log(user.username);
         return (
             <div className={classes.root}>
                 <AppBar position='fixed' style={{backgroundColor: '#39A298'}}>
@@ -114,6 +124,9 @@ class Navigation extends Component {
                                     </div>
                                 </Button>
                             </Fragment>
+                            {
+                                !user || !user.username ? (
+                                <Fragment>
                             <Fragment>
                                 <NavLink className={classes.btn} to='/register'>
                                     <Button
@@ -136,7 +149,24 @@ class Navigation extends Component {
                                     </Button>
                                 </NavLink>
                             </Fragment>
+                                </Fragment>) :
+                                (
+                                    <Fragment>
+                                        <NavLink className={classes.btn} to='/properties'>
+                                            <Button
+                                                color='inherit'
+                                                onClick={this.signOutUser}
+                                            >
+                                                <div className={classes.btn}>
+                                                    Sing out
+                                                </div>
+                                            </Button>
+                                        </NavLink>
+                                    </Fragment>
+                                )
 
+
+                            }
                         </div>
 
 
@@ -148,9 +178,13 @@ class Navigation extends Component {
 }
 
 
-
+const mapStateToProps = ({userData : { user, type }}) => ({
+    user,
+    type,
+});
 
 export default compose(
     withStyles(navigationStyles),
+    connect(mapStateToProps, { loginUserSuccess, setUserTypeSuccess }),
     connect(null, { getAllProperties })
 )(Navigation);

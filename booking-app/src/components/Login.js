@@ -14,6 +14,7 @@ import Card from "@material-ui/core/Card";
 import PropTypes from "prop-types";
 import {withStyles} from "@material-ui/styles";
 import {loginUserSuccess} from "../redux/actions";
+import {setUserTypeSuccess} from "../redux/actions";
 import Amplify, {Auth} from "aws-amplify";
 
 const loginStyles = () => ({
@@ -64,20 +65,42 @@ const loginStyles = () => ({
 
 class Login extends Component {
      onSubmit =  async (values) => {
-        Amplify.configure({
-            Auth: {
-                region: 'eu-central-1',
-                userPoolId: 'eu-central-1_sXobUjqVh',
-                userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
-                //redirectUrl: 'http://localhost:3000',
-            }
-        });
+         console.log(values);
+         if(values.userType=="User") {
+             Amplify.configure({
+                 Auth: {
+                     region: 'eu-central-1',
+                     userPoolId: 'eu-central-1_sXobUjqVh',
+                     userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
+                     //redirectUrl: 'http://localhost:3000',
+                 }
+             });
+         }
+         else {
+             Amplify.configure({
+                 Auth: {
+                     region: 'eu-central-1',
+                     userPoolId: 'eu-central-1_pPGEanitH',
+                     userPoolWebClientId: '4o98dleg8r6uqi1g09ctoua1cg',
+                     //redirectUrl: 'http://localhost:3000',
+                 }
+             });
+         }
         const authUser = await Auth.signIn(values.email, values.password);
         console.log("authUser");
         console.log( await Auth.currentSession());
-        const tocken= await Auth.currentSession();
+        const tocken= await Auth.currentSession();///hosts/profile
+         var url = "";
+         if(values.userType=="User")
+         {
+             url="https://api.booking.knine.xyz/customers/profile";
+         }
+         else
+         {
+             url="https://api.booking.knine.xyz/hosts/profile";
+         }
          const response = await fetch (
-             `https://api.booking.knine.xyz/customers/profile`,
+             url,
              {
                  headers: {
                      'Authorization': 'Bearer ' + tocken.idToken.jwtToken,
@@ -85,14 +108,21 @@ class Login extends Component {
                  method: 'GET'
              });
          const userInfo=(await response.json());
-         console.log( userInfo);
+        // console.log( userInfo);
          //console.log( await response.json().username);
         // console.log( await response.json().PromiseValue);
         const { loginUserSuccess } = this.props;
+
         loginUserSuccess(userInfo);
-        history.replace('/username');
+
+
         const { user } = this.props;
         console.log(user);
+         const {setUserTypeSuccess} = this.props;
+         setUserTypeSuccess({"userType":values.userType});
+         const { type } = this.props;
+        // console.log(type);
+         history.replace(`/${user.username}`);
         //console.log('Send values to api/login');
     };
 
@@ -105,6 +135,7 @@ class Login extends Component {
                         onSubmit={this.onSubmit}
                         render={({handleSubmit}) => (
                             <form className={classes.container} onSubmit={handleSubmit}>
+
                                 <Field name='email'>
                                     {({input}) => (
                                         <TextField
@@ -130,7 +161,14 @@ class Login extends Component {
                                         />
                                     )}
                                 </Field>
-
+                                <div className={classes.item}>
+                                    { //<label  >User type </label>
+                                    }
+                                    <Field name="userType"   defaultValue={"User"} className={classes.item} component="select">
+                                        <option value="Host">Host</option>
+                                        <option value="User">User</option>
+                                    </Field>
+                                </div>
                                 <Box className={classes.actions}>
                                     <Button
                                         className={classes.btn}
@@ -156,11 +194,12 @@ class Login extends Component {
 }
 
 
-const mapStateToProps = ({userData : { user }}) => ({
+const mapStateToProps = ({userData : { user, type }}) => ({
     user,
+    type,
 });
 
 export default compose(
     withStyles(loginStyles),
-    connect(mapStateToProps, { loginUserSuccess})
+    connect(mapStateToProps, { loginUserSuccess, setUserTypeSuccess })
 )(Login);

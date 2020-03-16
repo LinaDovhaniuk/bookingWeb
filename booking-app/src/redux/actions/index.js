@@ -4,7 +4,9 @@ import {
     GET_PROPERTY_BY_ID_SUCCESS,
     ADD_PROPERTY_COMMENT_SUCCESS,
     LOGIN_USER_SUCCESS,
+    SET_USER_TYPE_SUCCESS,
 } from './types';
+import {Auth} from "aws-amplify";
 
 export const getAllProperties =  () =>
     async (dispatch) => {
@@ -57,12 +59,14 @@ export const getPropertyByIdSuccess = (data) => ({
 
 export const addPropertyComment = (id, comment) =>
     async (dispatch) => {
+    const tocken= await Auth.currentSession();
     console.log(comment);
         const response = await fetch (
             `https://api.booking.knine.xyz/properties/${id}/comments`,
             {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + tocken.idToken.jwtToken,
                 },
                 method: 'POST',
                 body: JSON.stringify({"text": comment}),
@@ -80,3 +84,8 @@ export const loginUserSuccess = (user) => ({
     type: LOGIN_USER_SUCCESS,
     payload: user,
 });
+export const setUserTypeSuccess = (type) => ({
+    type: SET_USER_TYPE_SUCCESS,
+    payload: type,
+});
+
