@@ -4,6 +4,7 @@ import {
     GET_PROPERTY_BY_ID_SUCCESS,
     ADD_PROPERTY_COMMENT_SUCCESS,
     LOGIN_USER_SUCCESS,
+    LOGOUT_USER_SUCCESS,
     SET_USER_TYPE_SUCCESS,
 } from './types';
 import {Auth} from "aws-amplify";
@@ -87,5 +88,8 @@ export const loginUserSuccess = (user) => ({
 export const setUserTypeSuccess = (type) => ({
     type: SET_USER_TYPE_SUCCESS,
     payload: type,
+});
+export const logoutUserSuccess = () => ({
+    type: LOGOUT_USER_SUCCESS,
 });
 

@@ -1,6 +1,7 @@
 // import { AUTH_USER_SUCCESS, CANCEL_EDIT_USER, EDIT_USER_SUCCESS, REGISTER_USER_SUCCESS } from '../../actions/types';
 import {LOGIN_USER_SUCCESS} from "../../actions/types";
 import {SET_USER_TYPE_SUCCESS} from "../../actions/types";
+import {LOGOUT_USER_SUCCESS} from "../../actions/types";
 
 const initialState = {
     user: {},
@@ -30,6 +31,11 @@ export default (state = initialState, { type, payload }) => {
             return {
                 ...state,
                 type: { ...payload },
+            };
+        case LOGOUT_USER_SUCCESS:
+            return {
+                ...state,
+                user: {},
             };
 
         default:

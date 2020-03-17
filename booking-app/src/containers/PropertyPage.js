@@ -121,6 +121,7 @@ class PropertyPage extends Component {
         const [ ,...restPhotos] = images;
         const { name, description, cover_image_url } = property;
         const { type } = this.props;
+        const { user } = this.props;
         return (
             <Box className={classes.mainBox}>
                 <Grid container className={classes.photosBox}>
@@ -167,7 +168,7 @@ class PropertyPage extends Component {
                                     <Typography variant='h4'>Comments</Typography>
                                     {propertyComments.map((c, index) => <Comment key={`comment-${index}`} comment={c}/>)}
                                     {
-                                       type && type.userType==='User' ? (<AddComment/>) :(<fragment/>)
+                                       user && user.username && type && type.userType==='User' ? (<AddComment/>) :(<fragment/>)
                                     }
                                 </Box>
                           //  </fragment>

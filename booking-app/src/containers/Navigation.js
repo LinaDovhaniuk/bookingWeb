@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import {NavLink} from "react-router-dom";
 import {withStyles} from "@material-ui/styles";
 import { Auth } from 'aws-amplify';
-import {getAllProperties, loginUserSuccess, setUserTypeSuccess} from "../redux/actions";
+import {getAllProperties, loginUserSuccess,logoutUserSuccess, setUserTypeSuccess} from "../redux/actions";
 
 const navigationStyles = () => ({
     btn: {
@@ -64,11 +64,14 @@ class Navigation extends Component {
         getAllProperties();
     };
 
-    signOutUser()
-    {
-        // Auth.signOut()
-        //     .then(data => console.log(data))
-        //     .catch(err => console.log(err));
+    signOutUser =  (props)=> {
+        // console.log("LOGOUT CALL");
+        // console.log(props);
+        Auth.signOut()
+            .then(data => console.log(data))
+            .catch(err => console.log(err));
+        const {logoutUserSuccess} = props;
+        logoutUserSuccess();
     };
 
     render() {
@@ -152,10 +155,10 @@ class Navigation extends Component {
                                 </Fragment>) :
                                 (
                                     <Fragment>
-                                        <NavLink className={classes.btn} to='/properties'>
+                                        <NavLink className={classes.btn} to='/properties' >
                                             <Button
                                                 color='inherit'
-                                                onClick={this.signOutUser}
+                                                onClick={()=>this.signOutUser(this.props)}
                                             >
                                                 <div className={classes.btn}>
                                                     Sing out
@@ -185,6 +188,6 @@ const mapStateToProps = ({userData : { user, type }}) => ({
 
 export default compose(
     withStyles(navigationStyles),
-    connect(mapStateToProps, { loginUserSuccess, setUserTypeSuccess }),
+    connect(mapStateToProps, { loginUserSuccess, setUserTypeSuccess, logoutUserSuccess }),
     connect(null, { getAllProperties })
 )(Navigation);
