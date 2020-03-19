@@ -110,6 +110,9 @@ class Register extends Component {
     };
 
     isUsernameValid = (username) => {
+        this.setState({
+            'usename': username,
+        });
         if (!username) {
             return 'Please enter your username';
         }
@@ -119,6 +122,11 @@ class Register extends Component {
         if (username.length > 25) {
             return 'Too long input (max size 25)';
         }
+    };
+    isUserTypeValid = (userType) => {
+        this.setState({
+            'userType': userType
+        });
     };
 
     isEmailValid = (email) => {
@@ -135,7 +143,7 @@ class Register extends Component {
             return 'Too long input (max size 45)';
         }
 
-        console.log(this.state);
+        // console.log(this.state);
     };
 
     isPasswordValid = (password) => {
@@ -189,16 +197,17 @@ class Register extends Component {
             .catch(err => console.log(err));
 
         const user = Auth.signIn(username, password);
-        console.log("user ", user);
-        this.props.history.push('/confirm', {email:'qweqwe'});
+        // console.log("user ", user);
+        this.props.history.push('/confirm', {user: user});
         // history.replace('/confirm');
-        console.log('confirm ', this.state.email);
+        // console.log('confirm ');
+        // console.log(this.state);
     };
 
 
     onSubmit = (values) => {
-        console.log(values);
-        console.log("reg values");
+        // console.log(values);
+        // console.log("reg values");
 
         if(values.userType=="User") {
             Amplify.configure({
@@ -224,6 +233,7 @@ class Register extends Component {
 // You can get the current config object
         var username = values.username;
         var password = values.password;
+        console.log("username ",username);
 
         Auth.signUp({
             username,
@@ -236,7 +246,7 @@ class Register extends Component {
         })
             .then(data => console.log(data))
             .catch(err => console.log(err));
-        this.props.history.push('/confirm', {email:values.username});
+        this.props.history.push('/confirm', {email:values.email, username:values.username, userType: values.userType });
     };
 
 
@@ -388,7 +398,7 @@ class Register extends Component {
                                 <div className={classes.item}>
                                     { //<label  >User type </label>
                                          }
-                                    <Field name="userType" defaultValue={"User"}  className={classes.item} component="select">
+                                    <Field name="userType" defaultValue={"User"}  className={classes.item} component="select" validate={this.isUserTypeValid}>
                                         <option value="Host">Host</option>
                                         <option value="User">User</option>
                                     </Field>

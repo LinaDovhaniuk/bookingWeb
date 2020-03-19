@@ -75,7 +75,9 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            'email': ''
+            email: this.props.location.state.email ? this.props.location.state.email : '',
+            username: this.props.location.state.username ? this.props.location.state.username : '',
+            userType: this.props.location.state.userType ? this.props.location.state.userType : false,
         };
     }
 
@@ -100,23 +102,37 @@ class Login extends Component {
                 }
             });
         }
-        console.log("values on confirmation");
-        console.log(values);
+        // console.log("values on confirmation");
+        // console.log(values);
         Auth.confirmSignUp(values.email, values.confirmation, {
             // Optional. Force user confirmation irrespective of existing alias. By default set to True.
             forceAliasCreation: true
         }).then(data => console.log(data))
             .catch(err => console.log(err));
-        console.log('Send confirmation code');
+        // console.log('Send confirmation code');
         history.replace('/Login');
     };
 
 
     componentDidMount() {
-        this.setState({
-            email: this.props.location.state.email
-        })
-        console.log("componentDidMount ", this.props.location.state.email);
+
+        try {
+
+            this.setState({
+                email: this.props.location.state.email ? this.props.location.state.email : '',
+                username: this.props.location.state.username ? this.props.location.state.username : '',
+                userType: this.props.location.state.userType ? this.props.location.state.userType : false,
+            })
+            console.log(this.state);
+        } catch (e) {
+            this.setState({
+                email: '',
+                username: '',
+                userType: false
+
+            })
+        }
+        // console.log("componentDidMount ", this.props.location.state.email);
         // this.props.initialize({email: 'some value here'});
         // set the value individually
         // this.props.dispatch(change('myFormName', 'anotherField', 'value'));
@@ -124,8 +140,9 @@ class Login extends Component {
 
     render() {
         const {classes} = this.props;
+        let username = this.state.username;
         const email = 'asdasd@asdasd.com';
-        console.log('test@aasdasd.com');
+        console.log(username);
         return (
             <div className={classes.rootContainer}>
                 <Card className={classes.card}>
@@ -136,18 +153,19 @@ class Login extends Component {
                         onSubmit={this.onSubmit}
                         render={({handleSubmit, invalid, ...data}) => console.log(data.submitting) || (
                             <form className={classes.container} onSubmit={handleSubmit}>
-                                <Field name='email'>
+                                <Field name='username'>
                                     {({input, meta}) => {
                                         return (
                                                 <TextField
-                                                    value={this.state.email}
-                                                    name='email'
+
+                                                    value={this.state.username}
+                                                    name='username'
                                                     className={classes.item}
                                                     label='Username'
                                                    // disabled={true}
                                                     placeholder='Input text for a single line field'
                                                     required
-                                                   {...input}
+
                                                 />
                                             )
                                     }}
@@ -155,7 +173,7 @@ class Login extends Component {
                                 <div className={classes.item}>
                                     { //<label  >User type </label>
                                     }
-                                    <Field name="userType" defaultValue={"User"} className={classes.item} component="select">
+                                    <Field name="userType" defaultValue={this.state.userType} className={classes.item} component="select">
                                         <option value="Host">Host</option>
                                         <option value="User">User</option>
                                     </Field>
