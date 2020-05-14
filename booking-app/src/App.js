@@ -8,6 +8,7 @@ import { compose } from 'redux';
 import Login from "./components/Login";
 import SingUp from "./components/Register";
 import Confirm from "./components/Confirmation";
+import Bookings from "./components/Bookings";
 import UserPage from "./containers/UserPage";
 import PropertiesList from "./containers/PropertiesList";
 import PropertyPage from "./containers/PropertyPage";
@@ -32,6 +33,7 @@ class App extends Component {
                     <Route exact component = { Confirm } path = '/confirm' />
                     <Route exact component = { UserPage } path = {`/${user.username}`} />
                     <Route exact component = { PropertiesList } path = '/properties' />
+                    <Route exact component = { Bookings } path = '/bookings' />
                     <Route exact component = { PropertyPage } path = '/properties/:id' />
                     <Redirect to= '/properties'/>
                 </Switch>

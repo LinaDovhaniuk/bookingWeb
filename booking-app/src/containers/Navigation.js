@@ -6,8 +6,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import {NavLink} from "react-router-dom";
 import {withStyles} from "@material-ui/styles";
-import { Auth } from 'aws-amplify';
-import {getAllProperties, loginUserSuccess,logoutUserSuccess, setUserTypeSuccess} from "../redux/actions";
+import {Auth} from 'aws-amplify';
+import {getAllProperties, loginUserSuccess, logoutUserSuccess, setUserTypeSuccess} from "../redux/actions";
 
 const navigationStyles = () => ({
     btn: {
@@ -64,7 +64,7 @@ class Navigation extends Component {
         getAllProperties();
     };
 
-    signOutUser =  (props)=> {
+    signOutUser = (props) => {
         // console.log("LOGOUT CALL");
         // console.log(props);
         Auth.signOut()
@@ -75,7 +75,7 @@ class Navigation extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         const {user} = this.props;
         //console.log(user.username);
         return (
@@ -83,7 +83,8 @@ class Navigation extends Component {
                 <AppBar position='fixed' style={{backgroundColor: '#39A298'}}>
                     <Toolbar className={classes.toolbar}>
                         <NavLink to='/' className={classes.link}>
-                            <svg width="56" height="44" viewBox="0 0 56 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="56" height="44" viewBox="0 0 56 44" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
                                 <rect width="56" height="44" fill="url(#pattern0)"/>
                                 <defs>
                                     <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -129,44 +130,59 @@ class Navigation extends Component {
                             </Fragment>
                             {
                                 !user || !user.username ? (
-                                <Fragment>
-                            <Fragment>
-                                <NavLink className={classes.btn} to='/register'>
-                                    <Button
-                                        color='inherit'>
+                                        <Fragment>
+                                            <Fragment>
+                                                <NavLink className={classes.btn} to='/register'>
+                                                    <Button
+                                                        color='inherit'>
 
-                                        <div className={classes.btn}>
-                                            Sing up
-                                        </div>
-                                    </Button>
-                                </NavLink>
-                            </Fragment>
-                            <Fragment>
-                                <NavLink className={classes.btn} to='/login'>
-                                    <Button
-                                        color='inherit'>
+                                                        <div className={classes.btn}>
+                                                            Sing up
+                                                        </div>
+                                                    </Button>
+                                                </NavLink>
+                                            </Fragment>
+                                            <Fragment>
+                                                <NavLink className={classes.btn} to='/login'>
+                                                    <Button
+                                                        color='inherit'>
 
-                                        <div className={classes.btn}>
-                                            Sing in
-                                        </div>
-                                    </Button>
-                                </NavLink>
-                            </Fragment>
-                                </Fragment>) :
-                                (
-                                    <Fragment>
-                                        <NavLink className={classes.btn} to='/properties' >
-                                            <Button
-                                                color='inherit'
-                                                onClick={()=>this.signOutUser(this.props)}
-                                            >
-                                                <div className={classes.btn}>
-                                                    Sing out
-                                                </div>
-                                            </Button>
-                                        </NavLink>
-                                    </Fragment>
-                                )
+                                                        <div className={classes.btn}>
+                                                            Sing in
+                                                        </div>
+                                                    </Button>
+                                                </NavLink>
+                                            </Fragment>
+                                        </Fragment>) :
+                                    (
+                                        <Fragment>
+                                            <Fragment>
+                                                <NavLink className={classes.btn} to='/bookings'>
+                                                    <Button
+                                                        color='inherit'>
+
+                                                        <div className={classes.btn}>
+                                                            My bookings
+                                                        </div>
+                                                    </Button>
+
+                                                </NavLink>
+                                            </Fragment>
+                                            <Fragment>
+                                                <NavLink className={classes.btn} to='/properties'>
+                                                    <Button
+                                                        color='inherit'
+                                                        onClick={() => this.signOutUser(this.props)}
+                                                    >
+                                                        <div className={classes.btn}>
+                                                            Sing out
+                                                        </div>
+                                                    </Button>
+                                                </NavLink>
+                                            </Fragment>
+
+                                        </Fragment>
+                                    )
 
 
                             }
@@ -181,13 +197,13 @@ class Navigation extends Component {
 }
 
 
-const mapStateToProps = ({userData : { user, type }}) => ({
+const mapStateToProps = ({userData: {user, type}}) => ({
     user,
     type,
 });
 
 export default compose(
     withStyles(navigationStyles),
-    connect(mapStateToProps, { loginUserSuccess, setUserTypeSuccess, logoutUserSuccess }),
-    connect(null, { getAllProperties })
+    connect(mapStateToProps, {loginUserSuccess, setUserTypeSuccess, logoutUserSuccess}),
+    connect(null, {getAllProperties})
 )(Navigation);

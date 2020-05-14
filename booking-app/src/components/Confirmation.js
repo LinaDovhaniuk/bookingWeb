@@ -78,6 +78,7 @@ class Login extends Component {
             email: this.props.location.state.email ? this.props.location.state.email : '',
             username: this.props.location.state.username ? this.props.location.state.username : '',
             userType: this.props.location.state.userType ? this.props.location.state.userType : false,
+            confirmation: '',
         };
     }
 
@@ -106,7 +107,7 @@ class Login extends Component {
         // console.log(values);
         Auth.confirmSignUp(values.email, values.confirmation, {
             // Optional. Force user confirmation irrespective of existing alias. By default set to True.
-            forceAliasCreation: true
+            forceAliasCreation: false
         }).then(data => console.log(data))
             .catch(err => console.log(err));
         // console.log('Send confirmation code');
@@ -122,13 +123,15 @@ class Login extends Component {
                 email: this.props.location.state.email ? this.props.location.state.email : '',
                 username: this.props.location.state.username ? this.props.location.state.username : '',
                 userType: this.props.location.state.userType ? this.props.location.state.userType : false,
+                confirmation: '',
             })
             console.log(this.state);
         } catch (e) {
             this.setState({
                 email: '',
                 username: '',
-                userType: false
+                userType: false,
+                confirmation: '',
 
             })
         }
@@ -182,7 +185,7 @@ class Login extends Component {
                                     {({input, meta}) => {
                                         return (
                                             <TextField
-                                                //value={this.state.email}
+                                                value={this.state.confirmation}
 
                                                 name='confirmation'
                                                 className={classes.item}
