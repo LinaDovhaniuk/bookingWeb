@@ -11,6 +11,9 @@ import Card from "@material-ui/core/Card";
 import AddComment from "./AddComment";
 import {withStyles} from "@material-ui/styles";
 import {loginUserSuccess, setUserTypeSuccess} from "../redux/actions";
+import {history} from "../redux/store";
+import {NavLink} from "react-router-dom";
+import {Form} from "react-final-form";
 
 
 
@@ -114,7 +117,12 @@ class PropertyPage extends Component {
         // this.adminType="admin";
         this.userType="user";
     }
+    onSubmit =  async (values) => {
 
+        // console.log(type);
+        history.replace(`/reservation`);
+        //console.log('Send values to api/login');
+    };
 
     render() {
         const { classes, property, propertyComments } = this.props;
@@ -123,6 +131,10 @@ class PropertyPage extends Component {
         const { type } = this.props;
         const { user } = this.props;
         return (
+            <Form
+                onSubmit={this.onSubmit}
+                render={({handleSubmit}) => (
+                    <form className={classes.container} onSubmit={handleSubmit}>
             <Box className={classes.mainBox}>
                 <Grid container className={classes.photosBox}>
                     <Grid className={classes.mainPhoto}>
@@ -148,7 +160,18 @@ class PropertyPage extends Component {
                     </Card>
 
                     <Box className={classes.actions}>
-                        {type && type.userType==='User' ? <Button>Reserve</Button> : <Button disabled >Reserve</Button>}
+                        {type && type.userType==='User' ?
+
+                                <Button
+                                    className={classes.btn}
+                                    color='primary'
+                                    type='submit'
+                                    variant='contained'>
+                                        Reserve
+                                </Button> :
+                            <Button disabled >Reserve</Button>
+                        }
+
 
                     </Box>
                 </Box>
@@ -177,6 +200,9 @@ class PropertyPage extends Component {
                 }
 
             </Box>
+                    </form>
+                )}
+            />
         )
     }
 }

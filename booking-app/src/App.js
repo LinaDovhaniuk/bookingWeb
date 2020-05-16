@@ -12,7 +12,7 @@ import Bookings from "./components/Bookings";
 import UserPage from "./containers/UserPage";
 import PropertiesList from "./containers/PropertiesList";
 import PropertyPage from "./containers/PropertyPage";
-
+import Reservation  from "./components/Reservation";
 import Navigation from "./containers/Navigation";
 import Box from "@material-ui/core/Box";
 import {loginUserSuccess, setUserTypeSuccess} from "./redux/actions";
@@ -33,6 +33,7 @@ class App extends Component {
                     <Route exact component = { Confirm } path = '/confirm' />
                     <Route exact component = { UserPage } path = {`/${user.username}`} />
                     <Route exact component = { PropertiesList } path = '/properties' />
+                    <Route exact component = { Reservation } path = '/reservation' />
                     <Route exact component = { Bookings } path = '/bookings' />
                     <Route exact component = { PropertyPage } path = '/properties/:id' />
                     <Redirect to= '/properties'/>
