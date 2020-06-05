@@ -11,6 +11,7 @@ import Box from "@material-ui/core/Box";
 import ClampLines from 'react-clamp-lines';
 import withStyles from "@material-ui/core/styles/withStyles";
 import mapStateToProps from "react-redux/es/connect/mapStateToProps";
+import { makeStyles } from '@material-ui/core/styles';
 
 import { getPropertyById, getPropertyComments } from "../redux/actions";
 

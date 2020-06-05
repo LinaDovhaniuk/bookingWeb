@@ -14,7 +14,14 @@ import {loginUserSuccess, setUserTypeSuccess} from "../redux/actions";
 import {history} from "../redux/store";
 import {NavLink} from "react-router-dom";
 import {Form} from "react-final-form";
-
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import {lightGreen} from "@material-ui/core/colors";
 
 
 const propertyPageStyles = () => ({
@@ -125,9 +132,10 @@ class PropertyPage extends Component {
     };
 
     render() {
+
         const { classes, property, propertyComments } = this.props;
         const [ ,...restPhotos] = images;
-        const { name, description, cover_image_url } = property;
+        const { name, description, cover_image_url, price, opportunities, landmarks, rate } = property;
         const { type } = this.props;
         const { user } = this.props;
         return (
@@ -159,7 +167,8 @@ class PropertyPage extends Component {
                         <div>{description}</div>
                     </Card>
 
-                    <Box className={classes.actions}>
+                    <Box >
+                        <box className={classes.actions}>
                         {type && type.userType==='User' ?
 
                                 <Button
@@ -172,8 +181,57 @@ class PropertyPage extends Component {
                             <Button disabled >Reserve</Button>
                         }
 
+                            </box>
+                        <Card className={classes.card}>
+                            <div>Price:{price} $ for a room</div>
+                        </Card>
+                        <Card className={classes.card}>
+                            <div>Rate:{rate} ({propertyComments.length} comments)</div>
+                        </Card>
+                        <Card className={classes.card}>
+                            <TableContainer component={Paper}>
+                                <Table className={classes.table} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell style={{fontWeight: 'bold'}}>Facilities</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {opportunities.map((row) => {
+                                            return <TableRow >
+                                                <TableCell component="th" scope="row">
+                                                    {row}
+                                                </TableCell>
+                                            </TableRow>
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TableContainer component={Paper}>
+                                <Table className={classes.table} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell ><text style={{fontWeight: 'bold'}}>LandMarks</text></TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {landmarks.map((row) => {
+                                            return <TableRow >
+                                                <TableCell component="th" scope="row">
+                                                    {row}
+                                                </TableCell>
+                                            </TableRow>
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+
+                        </Card>
 
                     </Box>
+
+
+
                 </Box>
 
                 { this.userType === 'admin'
@@ -200,6 +258,7 @@ class PropertyPage extends Component {
                 }
 
             </Box>
+
                     </form>
                 )}
             />
