@@ -2,7 +2,7 @@ import {withRouter} from "react-router";
 
 import {compose} from "redux";
 import {connect} from "react-redux";
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import {withStyles} from '@material-ui/styles';
 
 import Box from "@material-ui/core/Box";
@@ -16,6 +16,9 @@ import '../style/index.css'
 import {user} from '../data'
 
 import {loginUserSuccess, setUserTypeSuccess} from "../redux/actions";
+import {NavLink} from "react-router-dom";
+import {Form} from "react-final-form";
+import {history} from "../redux/store";
 
 
 const userPageStyles = () => ({
@@ -172,7 +175,12 @@ class UserPage extends Component {
             });
         }
     };
+    onSubmit =  async (values) => {
 
+        // console.log(type);
+        history.replace(`/propertyAdding`);
+        //console.log('Send values to api/login');
+    };
 
     render() {
         //const { loginUserSuccess } = this.props;
@@ -186,10 +194,23 @@ class UserPage extends Component {
         const {firstName, lastName, username, email, rating, image} = this.state;
         return (
             <Box className={classes.mainBox}>
+                <Form
+                    onSubmit={this.onSubmit}
+                    render={({handleSubmit}) => (
+                        <form className={classes.container} onSubmit={handleSubmit}>
                 <Box className={classes.actions}>
                     <Button>Profile Settings</Button>
                     <Button>Payment Settings</Button>
+                    <Fragment>
+                            <Button className={classes.btn} to='/propertyAdding'   type='submit'>
+                                <div className={classes.btn}>
+                                    Create new property
+                                </div>
+                            </Button>
+                    </Fragment>
                 </Box>
+                        </form>
+                        )}/>
                 <Card className={classes.card}>
                     <Typography varian='h5'>Your Profile</Typography>
                     <Box className={classes.profileInfo}>

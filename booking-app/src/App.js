@@ -14,6 +14,7 @@ import PropertiesList from "./containers/PropertiesList";
 import PropertyPage from "./containers/PropertyPage";
 import Reservation  from "./components/Reservation";
 import Navigation from "./containers/Navigation";
+import PropertyAdding from "./components/PropertyAdding"
 import Box from "@material-ui/core/Box";
 import {loginUserSuccess, setUserTypeSuccess} from "./redux/actions";
 
@@ -36,6 +37,7 @@ class App extends Component {
                     <Route exact component = { Reservation } path = '/reservation' />
                     <Route exact component = { Bookings } path = '/bookings' />
                     <Route exact component = { PropertyPage } path = '/properties/:id' />
+                    <Route exact component = { PropertyAdding } path = '/propertyAdding' />
                     <Redirect to= '/properties'/>
                 </Switch>
             </Box>
