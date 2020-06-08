@@ -93,7 +93,7 @@ class PropertyAdding extends Component {
         if (!name) {
             return 'Please enter your value';
         }
-        if (!(/^[a-zA-Z]+$/).test(name)) {
+        if (!(/^[a-zA-Z\s]+$/).test(name)) {
             return 'Only letters are allowed';
         }
         if (name.length > 80) {

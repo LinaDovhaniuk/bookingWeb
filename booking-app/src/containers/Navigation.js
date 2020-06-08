@@ -137,7 +137,7 @@ class Navigation extends Component {
                                                         color='inherit'>
 
                                                         <div className={classes.btn}>
-                                                            Sing up
+                                                            Sign up
                                                         </div>
                                                     </Button>
                                                 </NavLink>
@@ -148,7 +148,7 @@ class Navigation extends Component {
                                                         color='inherit'>
 
                                                         <div className={classes.btn}>
-                                                            Sing in
+                                                            Sign in
                                                         </div>
                                                     </Button>
                                                 </NavLink>
@@ -175,7 +175,7 @@ class Navigation extends Component {
                                                         onClick={() => this.signOutUser(this.props)}
                                                     >
                                                         <div className={classes.btn}>
-                                                            Sing out
+                                                            Sign out
                                                         </div>
                                                     </Button>
                                                 </NavLink>
