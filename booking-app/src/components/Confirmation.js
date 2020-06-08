@@ -83,6 +83,8 @@ class Login extends Component {
     }
 
     onSubmit = (values) => {
+
+        console.log(values);
         if(values.userType=="User") {
             Amplify.configure({
                 Auth: {
@@ -105,13 +107,13 @@ class Login extends Component {
         }
         // console.log("values on confirmation");
         // console.log(values);
-        Auth.confirmSignUp(values.email, values.confirmation, {
+        Auth.confirmSignUp(values.username, values.confirmation, {
             // Optional. Force user confirmation irrespective of existing alias. By default set to True.
             forceAliasCreation: false
         }).then(data => console.log(data))
             .catch(err => console.log(err));
         // console.log('Send confirmation code');
-        history.replace('/Login');
+        history.replace('/properties');
     };
 
 
@@ -167,7 +169,7 @@ class Login extends Component {
                                                     label='Username'
                                                    // disabled={true}
                                                     placeholder='Input text for a single line field'
-                                                    required
+                                                    {...input}
 
                                                 />
                                             )

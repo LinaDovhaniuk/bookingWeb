@@ -134,8 +134,12 @@ class PropertyPage extends Component {
     render() {
 
         const { classes, property, propertyComments } = this.props;
+
+        console.log(this.props);
         const [ ,...restPhotos] = images;
+        console.log(property);
         const { name, description, cover_image_url, price, opportunities, landmarks, rate } = property;
+        console.log(opportunities);
         const { type } = this.props;
         const { user } = this.props;
         return (
@@ -218,7 +222,7 @@ class PropertyPage extends Component {
                                         {landmarks.map((row) => {
                                             return <TableRow >
                                                 <TableCell component="th" scope="row">
-                                                    {row}
+                                                    {row.name}
                                                 </TableCell>
                                             </TableRow>
                                         })}
@@ -234,7 +238,7 @@ class PropertyPage extends Component {
 
                 </Box>
 
-                { this.userType === 'admin'
+                { this.userType === 'Host'
                         ? (
                             <fragment>
                             <Box className={classes.actions}>

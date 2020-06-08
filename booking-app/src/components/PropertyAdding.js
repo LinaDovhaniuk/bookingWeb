@@ -15,8 +15,11 @@ import awsconfig from './amf_config';
 import Amplify, {Auth} from 'aws-amplify';
 import {history} from '../redux/store';
 import Avatar from "@material-ui/core/Avatar";
+import {addPropertySuccess, loginUserSuccess, setUserTypeSuccess} from "../redux/actions";
 // import {reduxForm, change} from 'redux-form';
 // import {connect} from 'react-redux';
+//import {addProperty, addPropertyComment} from "../redux/actions";
+
 
 const registerStyles = () => ({
     rootContainer: {
@@ -74,7 +77,7 @@ const registerStyles = () => ({
 
 });
 
-class Register extends Component {
+class PropertyAdding extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -88,25 +91,13 @@ class Register extends Component {
 
     isNameValid = (name) => {
         if (!name) {
-            return 'Please enter your first name';
+            return 'Please enter your value';
         }
         if (!(/^[a-zA-Z]+$/).test(name)) {
             return 'Only letters are allowed';
         }
-        if (name.length > 25) {
-            return 'Too long input (max size 25)';
-        }
-    };
-
-    isSurnameValid = (surname) => {
-        if (!surname) {
-            return 'Please enter your last name';
-        }
-        if (!(/^[a-zA-Z]+$/).test(surname)) {
-            return 'Only letters are allowed';
-        }
-        if (surname.length > 25) {
-            return 'Too long input (max size 25)';
+        if (name.length > 80) {
+            return 'Too long input (max size 80)';
         }
     };
 
@@ -124,103 +115,44 @@ class Register extends Component {
             return 'Too long input (max size 25)';
         }
     };
-    isUserTypeValid = (userType) => {
-        this.setState({
-            'userType': userType
-        });
-    };
-
-    isEmailValid = (email) => {
-        this.setState({
-            'email': email
-        })
-        if (!email) {
-            return 'Please enter you email: e.g user@gmail.com';
-        }
-        if (!(/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/).test(email)) {
-            return 'e.g user@gmail.com';
-        }
-        if (email.length > 25) {
-            return 'Too long input (max size 45)';
-        }
-
-        // console.log(this.state);
-    };
-
-    isPasswordValid = (password) => {
-        if (!password) {
-            return 'Please enter your password';
-        }
-        if (password.length < 6) {
-            return 'Password is too short (min size 6)';
-        }
-        // if(!(/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/).test(password))
-        // {
-        //     return 'invalid password format (you need to have at least 1 capital letter, 1 special symbol, 1 digit)';
-        // }
-    };
-
-    isRepeatedPasswordValid = (repeatedPassword, values) => {
-        if (!repeatedPassword) {
-            return 'Please repeat your password';
-        }
-        if (repeatedPassword.length < 6) {
-            return 'Password is too short (min size 6)';
-        }
-        if (repeatedPassword !== values.password) {
-            return 'Password does not match';
-        }
-    };
-
-    registerUser = () => {
-
-        Amplify.configure({
-            Auth: {
-                region: 'eu-central-1',
-                userPoolId: 'eu-central-1_sXobUjqVh',
-                userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
-                //redirectUrl: 'http://localhost:3000',
-            }
-        });
-
-// You can get the current config object
-        var username = "testUsername";
-        var password = "Longpassword!1";
-
-        Auth.signUp({
-            username,
-            password,
-            attributes: {
-                email: "den5096@gmail.com"
-            },
-        })
-            .then(data => console.log(data))
-            .catch(err => console.log(err));
-
-        const user = Auth.signIn(username, password);
-        // console.log("user ", user);
-        this.props.history.push('/confirm', {user: user});
-        // history.replace('/confirm');
-        // console.log('confirm ');
-        // console.log(this.state);
-    };
 
 
-    onSubmit = (values) => {
-        // console.log(values);
-        // console.log("reg values");
+    addProperty = async (params) =>
+        async (dispatch) => {
+            const tocken= await Auth.currentSession();
+            console.log(params);
+            const response = await fetch (
+                `https://api.booking.knine.xyz/properties`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + tocken.idToken.jwtToken,
+                    },
+                    method: 'POST',
+                    body: JSON.stringify({"name": params.name,
+                        "description":params.description,
+                        "address":params.address,
+                        "city":params.city,
+                        "country":params.country,
+                        "opportunities":params.opportunities,
+                        "price":params.price,
+                        "landmarks":params.landmarks,
+                        "totalRoomsNumber":params.roomNumber,
+                        "cover_image_file_name": "string",
+                        "cover_image_base64": "string"}),
+                });
+            console.log(response);
+            const responseJson = await response.json();
+            console.log(responseJson);
+            dispatch(addPropertySuccess(responseJson));
+        };
+    onSubmit = async (values) => {
+      // console.log(values);
 
-        if(values.userType=="User") {
-            Amplify.configure({
-                Auth: {
-                    region: 'eu-central-1',
-                    userPoolId: 'eu-central-1_sXobUjqVh',
-                    userPoolWebClientId: '5vpqdi2hlkvqjsjqd3gsama9c8',
-                    //redirectUrl: 'http://localhost:3000',
-                }
-            });
-        }
-        else {
+       // console.log(values.name);
+
+
+
             Amplify.configure({
                 Auth: {
                     region: 'eu-central-1',
@@ -229,25 +161,39 @@ class Register extends Component {
                     //redirectUrl: 'http://localhost:3000',
                 }
             });
-        }
+        const tocken= await Auth.currentSession();
 
-// You can get the current config object
-        var username = values.username;
-        var password = values.password;
-        console.log("username ",username);
 
-        Auth.signUp({
-            username,
-            password,
-            attributes: {
-                given_name: values.firstName,
-                family_name: values.lastName,
-                email: values.email
-            },
+       // await console.log(tocken);
+        const response = await  fetch (
+            `https://api.booking.knine.xyz/properties`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + tocken.idToken.jwtToken,
+                },
+                method: 'POST',
+                body: JSON.stringify({name: values.name,
+                    "description":values.Property_description,
+                    "address":values.address,
+                    "city":values.city,
+                    "country":values.country,
+                    "opportunities":[values.facilities],
+                    "price":values.price,
+                    "landmarks":[{"name":values.landmarks, "distance":0}],
+                    "totalRoomsNumber":1,
+                    "cover_image_file_name": "string",
+                    "cover_image_base64": "string"}),
+            });
+        console.log(response);
+        const responseJson = await response.json();
+        console.log(responseJson);
+       // dispatch(addPropertySuccess(responseJson));
+
+        history.replace('/Login');
+        return new Promise(resolve => {
+            setTimeout(resolve, 0);
         })
-            .then(data => console.log(data))
-            .catch(err => console.log(err));
-        this.props.history.push('/confirm', {email:values.email, username:values.username, userType: values.userType });
     };
 
 
@@ -257,15 +203,15 @@ class Register extends Component {
             <div className={classes.rootContainer}>
                 <Card className={classes.card}>
                     <div className={classes.helpInfo}>
-                        <Typography variant='h6'> Create your account </Typography>
-                        <div> Create an account to easily use Booking services.</div>
+                        <Typography variant='h6'> Property creation </Typography>
+                        <div> Create a property.</div>
                     </div>
 
                     <Form
                         onSubmit={this.onSubmit}
                         render={({handleSubmit, invalid, ...data}) => console.log(data.submitting) || (
                             <form className={classes.container} onSubmit={handleSubmit}>
-                                <Field name='firstName'
+                                <Field name='name'
                                        validate={this.isNameValid}
                                 >
                                     {({input, meta}) => {
@@ -407,7 +353,7 @@ class Register extends Component {
                                     }
 
                                 </Field>
-                                <Field name='Facilities'
+                                <Field name='facilities'
                                 >
                                     {({input, meta}) => {
                                         const error = ((meta.modified || meta.touched) && meta.error) || '';
@@ -429,7 +375,7 @@ class Register extends Component {
                                     }
 
                                 </Field>
-                                <Field name='Landmarks'
+                                <Field name='landmarks'
                                 >
                                     {({input, meta}) => {
                                         const error = ((meta.modified || meta.touched) && meta.error) || '';
@@ -474,5 +420,12 @@ class Register extends Component {
     }
 }
 
-export default withStyles(registerStyles)(Register);
+export default withStyles(registerStyles)(PropertyAdding);
 
+//const mapStateToProps = ({propertyData : { property }}) => ({
+  //  property,
+//});
+
+//export default compose(
+ //   withStyles(registerStyles)(PropertyAdding),
+  //  connect(mapStateT

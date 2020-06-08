@@ -1,7 +1,7 @@
 import {
     GET_PROPERTIES_SUCCESS,
     GET_PROPERTY_COMMENTS_SUCCESS,
-    GET_PROPERTY_BY_ID_SUCCESS, ADD_PROPERTY_COMMENT_SUCCESS,
+    GET_PROPERTY_BY_ID_SUCCESS, ADD_PROPERTY_COMMENT_SUCCESS,ADD_PROPERTY_SUCCESS,
 } from '../../actions/types';
 
 const initialState = {
@@ -31,6 +31,11 @@ export default (state = initialState, { type, payload }) => {
             return {
                 ...state,
                 comments: [...state.comments, payload]
+            };
+        case ADD_PROPERTY_SUCCESS:
+            return {
+                ...state,
+                property: {...payload}
             };
         default:
             return state;

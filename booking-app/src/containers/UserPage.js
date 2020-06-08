@@ -201,13 +201,15 @@ class UserPage extends Component {
                 <Box className={classes.actions}>
                     <Button>Profile Settings</Button>
                     <Button>Payment Settings</Button>
-                    <Fragment>
+                    {type.userType=== 'Host' ?
+                        (<Fragment>
                             <Button className={classes.btn} to='/propertyAdding'   type='submit'>
                                 <div className={classes.btn}>
                                     Create new property
                                 </div>
                             </Button>
-                    </Fragment>
+                    </Fragment>)
+                        :( <Fragment> </Fragment>)}
                 </Box>
                         </form>
                         )}/>

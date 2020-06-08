@@ -45,7 +45,7 @@ const propertyStyles = () => ({
         color: '#39A298'
     },
     description: {
-        minWidth: 600,
+        minWidth: 800,
         minHeight: 70,
     },
     more: {},
@@ -85,7 +85,7 @@ class Property extends Component {
                     <ClampLines
                         text={description}
                         id="really-unique-id"
-                        lines={3}
+                        lines={8}
                         ellipsis="..."
                         buttons={false}
                     />

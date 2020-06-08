@@ -179,6 +179,15 @@ class Navigation extends Component {
                                                         </div>
                                                     </Button>
                                                 </NavLink>
+                                                <NavLink className={classes.btn} to={`/${user.username}`}>
+                                                    <Button
+                                                        color='inherit'
+                                                    >
+                                                        <div className={classes.btn}>
+                                                            Profile
+                                                        </div>
+                                                    </Button>
+                                                </NavLink>
                                             </Fragment>
 
                                         </Fragment>

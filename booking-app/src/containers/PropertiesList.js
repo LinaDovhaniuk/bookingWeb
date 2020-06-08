@@ -37,6 +37,7 @@ const listStyles = () => ({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        width:'80%',
     },
 });
 
@@ -53,7 +54,7 @@ class PropertiesList extends Component {
         return (
             <Box className={classes.mainBox}>
                 <Box className={classes.actions}>
-                    <Button>Profile Settings</Button>
+                    <Button>Search bar</Button>
                 </Box>
                 <Box className={classes.properties}>
                     {properties.map( property =>  <Property key={`property-${property.id}`} property={property} />)}
